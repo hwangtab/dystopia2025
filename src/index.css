@@ -1,0 +1,243 @@
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom font for body */
+@font-face {
+    font-family: 'MonoplexKR-Light';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_Monoplex-kr@1.0/MonoplexKR-Light.woff2') format('woff2');
+    font-weight: 300; /* Corresponds to Light */
+    font-style: normal;
+}
+
+/* Custom font for headings */
+@font-face {
+    font-family: 'Giants-Inline';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/Giants-Inline.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Added Pretendard-Regular */
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* @font-face { // Removing GilbeotRainbow
+    font-family: 'GilbeotRainbow';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2112@1.0/GilbeotRainbow.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+} */
+
+@font-face {
+  font-family: 'Blender Pro';
+  src: url('/fonts/BlenderPro-Bold.woff2') format('woff2'),
+       url('/fonts/BlenderPro-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blender Pro';
+  src: url('/fonts/BlenderPro-Medium.woff2') format('woff2'),
+       url('/fonts/BlenderPro-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blender Pro';
+  src: url('/fonts/BlenderPro-Book.woff2') format('woff2'),
+       url('/fonts/BlenderPro-Book.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Base styles */
+:root {
+  /* Updated based on tailwind.config.js */
+  --color-primary: #050818; 
+  --color-primary-dark: #0A0F2A;   
+  --color-primary-darker: #03050F; 
+  --color-accent-blue: #215DFF;    
+  --color-accent-magenta: #B43CFF; 
+  --color-accent-cyan: #00FFFF; /* Added cyan */
+}
+
+html {
+  scroll-behavior: smooth;
+  cursor: crosshair; /* Change default cursor */
+}
+
+body {
+  @apply bg-primary text-white font-sans;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  word-break: keep-all; /* Prevent awkward word breaks in CJK text */
+  /* font-family: 'Inter', sans-serif; // Default will be set by Tailwind */
+  position: relative; /* Needed for pseudo-element positioning */
+}
+
+/* Removed animated grid keyframes */
+
+/* Removed scanline overlay class and related comments */
+
+
+/* Custom container */
+.container-custom {
+  @apply px-4 sm:px-6 lg:px-8 max-w-7xl;
+}
+
+/* Typography */
+.font-blender {
+  font-family: 'Giants-Inline', sans-serif; /* Updated to use Giants-Inline */
+}
+
+/* Removed .glitch-bg and related styles */
+
+
+@keyframes scanline { /* This keyframe seems unused now, keeping for potential future use */
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100vh; } /* Adjust speed by changing vh */
+}
+
+/* Buttons with Updated Neon Effects and Gradient Background */
+.btn-primary {
+  /* Removed bg-accent-magenta, Added gradient */
+  @apply inline-block bg-gradient-to-br from-accent-magenta to-accent-blue text-white px-6 py-3 font-medium transition-all duration-300 ease-in-out relative overflow-hidden border border-transparent transform skew-x-[-10deg]; 
+  /* Adjusted hover effect for gradient */
+  @apply shadow-neon-magenta hover:brightness-110 hover:shadow-neon-magenta-hover hover:border-accent-magenta; 
+}
+.btn-primary::before {
+  content: '';
+  @apply absolute top-0 left-0 w-full h-full bg-white opacity-0 transition-opacity duration-300;
+  mix-blend-mode: overlay;
+}
+.btn-primary:hover::before {
+  @apply opacity-10;
+}
+.btn-primary:active {
+  animation: buttonClickFlash 0.1s ease-in-out; /* Apply flash animation */
+}
+
+.btn-secondary {
+  /* Removed bg-gray-800/50, Added gradient */
+  @apply inline-block bg-gradient-to-br from-gray-800 to-primary-darker text-white px-6 py-3 font-medium transition-all duration-300 ease-in-out relative overflow-hidden border border-accent-blue/50 transform skew-x-[-10deg]; 
+  /* Adjusted hover effect for gradient */
+  @apply shadow-neon-blue hover:brightness-125 hover:border-accent-blue hover:shadow-neon-blue-hover; 
+}
+.btn-secondary:active {
+  animation: buttonClickFlash 0.1s ease-in-out; /* Apply flash animation */
+}
+.btn-secondary::before {
+  content: '';
+  @apply absolute top-0 left-0 w-full h-full bg-accent-blue opacity-0 transition-opacity duration-300; /* Use blue */
+  mix-blend-mode: screen; /* Changed blend mode */
+}
+.btn-secondary:hover::before {
+   @apply opacity-10;
+}
+
+
+/* Glitch effect for text */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-primary-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent-cyan); /* Use cyan */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-blue); /* Use blue */
+}
+
+/* Custom animations */
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+.animate-glitch {
+  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+
+/* Button Click Flash Animation */
+@keyframes buttonClickFlash {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.5); } /* Adjust brightness for flash intensity */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  h1 {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+  }
+  
+  h2 {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+  }
+}

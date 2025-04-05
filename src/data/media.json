@@ -1,0 +1,27 @@
+{
+  "videos": [
+    {
+      "id": "vid1",
+      "title": "물결 (Mulggyeol) Official M/V",
+      "description": "앨범 'Dystopia 2025'의 '물결' 공식 뮤직비디오입니다.",
+      "thumbnail": "/images/thumbnails/video1_thumb.jpg", 
+      "videoUrl": "https://www.youtube.com/watch?v=9t3w8vDNNIw", 
+      "date": "2025-05-02",
+      "duration": "03:52",
+      "type": "뮤직비디오",
+      "isFeatured": true 
+    },
+    {
+      "id": "vid2",
+      "title": "'Dystopia 2025' Album Teaser",
+      "description": "정규 1집 'Dystopia 2025' 발매 기념 티저 영상입니다. 앨범의 분위기를 미리 느껴보세요.",
+      "thumbnail": "/images/thumbnails/video2_thumb.jpg",
+      "videoUrl": "https://www.youtube.com/watch?v=KOxJb6Ro_O8",
+      "date": "2025-04-25",
+      "duration": "01:10",
+      "type": "티저",
+      "isFeatured": false
+    }
+  ],
+  "interviews": []
+}
