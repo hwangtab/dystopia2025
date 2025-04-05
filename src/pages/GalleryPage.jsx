@@ -6,11 +6,11 @@ import { FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 
-// Dynamically import images directly from the public/images directory
-// Target only .jpg files and filter out specific ones like hero.jpg
-const imageModules = import.meta.glob('/public/images/*.jpg', { eager: true });
+// Dynamically import images from the src/assets/images directory
+// Target only .jpg files
+const imageModules = import.meta.glob('/src/assets/images/*.jpg', { eager: true });
 const images = Object.keys(imageModules)
-  .filter(path => !path.endsWith('/hero.jpg')) // Exclude hero.jpg
+  // No need to filter hero.jpg here if it was moved to src/assets/images
   .sort() // Sort paths alphabetically/numerically
   .map((path) => imageModules[path].default);
 

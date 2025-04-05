@@ -3,26 +3,36 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  base: '/dystopia2025/', // Add base path for GitHub Pages
-  plugins: [react()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
-  server: {
-    port: 3000,
-    open: true,
-  },
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
+export default defineConfig(({ command }) => {
+  const config = {
+    plugins: [react()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
       },
     },
-  },
+    server: {
+      port: 3000,
+      open: true,
+    },
+    build: {
+      outDir: 'dist',
+      sourcemap: true,
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+        },
+      },
+    },
+  }
+
+  if (command === 'build') {
+    // Apply base path only for build command (GitHub Pages deployment)
+    config.base = '/dystopia2025/'
+  }
+
+  // For development server (command === 'serve'), base will be '/' (default)
+  
+  return config
 })
