@@ -34,6 +34,14 @@ const MainPage = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  // Scroll handler for the arrow button
+  const handleScrollDown = () => {
+    const nextSection = document.getElementById('album-intro');
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   
   // Animation variants
   const fadeInUp = {
@@ -112,7 +120,8 @@ const MainPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1.2 }} // Slightly increased delay
-              className="mt-16 text-gray-400" // Removed absolute positioning, added margin-top
+              className="mt-16 text-gray-400 cursor-pointer" // Removed absolute positioning, added margin-top and cursor-pointer
+              onClick={handleScrollDown} // Add onClick handler
             >
               <div className="animate-bounce">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -125,7 +134,7 @@ const MainPage = () => {
       </section>
       
       {/* Album Section */}
-      <section className="py-24 bg-primary-dark bg-opacity-80">
+      <section id="album-intro" className="py-24 bg-primary-dark bg-opacity-80"> {/* Add id here */}
         <div className="container-custom mx-auto">
           <motion.div 
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
