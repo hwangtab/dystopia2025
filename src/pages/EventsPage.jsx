@@ -116,14 +116,14 @@ const EventsPage = () => {
 
           {/* Featured Events Section Removed */}
 
-          {/* All Events */}
-          <motion.div variants={fadeInUp}>
-            <h2 className="text-2xl font-blender mb-8 text-accent-blue">
+          {/* All Events - Wrapped in a container similar to "공연 관련 안내" */}
+          <motion.div variants={fadeInUp} className="mb-16 bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6"> {/* Added container div and styling */}
+            <h2 className="text-2xl font-blender mb-8 text-accent-blue"> {/* Adjusted mb */}
               <GlitchText text="전체 공연 일정" intensity="low" interactive={true} />
             </h2> {/* Use blue */}
 
             {eventsData.events.length === 0 ? (
-              <div className="text-center py-16 text-gray-400">
+              <div className="text-center py-16 text-gray-400"> {/* Kept padding for empty state */}
                 <p className="text-lg mb-2">현재 예정된 공연이 없습니다.</p>
                 <p>새로운 공연 소식은 추후 공지될 예정입니다.</p>
               </div>
@@ -206,10 +206,11 @@ const EventsPage = () => {
                 ))}
               </div>
             )}
-          </motion.div>
-          {/* Added mb-16 to this final block */}
-          <motion.div variants={fadeInUp} className="mt-16 mb-16 bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6">
-            <h2 className="text-2xl font-blender mb-4 text-white">
+          </motion.div> {/* End of "All Events" container */}
+          
+          {/* 공연 관련 안내 Section */}
+          <motion.div variants={fadeInUp} className="mb-16 bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6"> {/* Removed mt-16 */}
+            <h2 className="text-2xl font-blender mb-4 text-accent-blue"> {/* Changed text-white to text-accent-blue */}
               <GlitchText text="공연 관련 안내" intensity="low" interactive={true} />
             </h2>
             <div className="space-y-4 text-gray-300">
