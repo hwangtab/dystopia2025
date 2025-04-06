@@ -27,12 +27,7 @@ export default defineConfig(({ command }) => {
     },
   }
 
-  if (command === 'build') {
-    // Apply base path only for build command (GitHub Pages deployment)
-    config.base = '/dystopia2025/'
-  }
-
-  // For development server (command === 'serve'), base will be '/' (default)
+  // Base path is '/' by default, which works for both dev and custom domain deployment
   
   return config
 })
