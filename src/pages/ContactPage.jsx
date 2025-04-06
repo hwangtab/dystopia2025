@@ -190,7 +190,9 @@ const ContactPage = () => {
             {/* Contact Form */}
             <motion.div variants={fadeInUp} className="lg:col-span-2">
               <div className="bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6 md:p-8 overflow-hidden"> {/* Added overflow-hidden */}
-                <h2 className="text-2xl font-blender mb-6 text-accent-blue">메시지 보내기</h2> {/* Use blue */}
+                <h2 className="text-2xl font-blender mb-6 text-accent-blue">
+                  <GlitchText text="메시지 보내기" intensity="low" interactive={true} />
+                </h2> {/* Use blue */}
                 
                 {/* Display Contact Form Success/Error Messages */}
                 {contactFormStatus.submitted && (
@@ -340,7 +342,9 @@ const ContactPage = () => {
             <motion.div variants={fadeInUp} className="lg:col-span-1">
               {/* Reverted hover effects to blue neon */}
               <div className="bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6 md:p-8 mb-8 border border-transparent hover:border-accent-blue/50 hover:shadow-neon-blue transition-all duration-300 overflow-hidden"> {/* Added overflow-hidden */}
-                <h2 className="text-2xl font-blender mb-6 text-accent-blue">연락처</h2> {/* Use blue */}
+                <h2 className="text-2xl font-blender mb-6 text-accent-blue">
+                  <GlitchText text="연락처" intensity="low" interactive={true} />
+                </h2> {/* Use blue */}
                 
                 <div className="space-y-4">
                   <div className="flex items-start">
@@ -360,7 +364,9 @@ const ContactPage = () => {
               
               {/* Reverted hover effects to blue neon */}
               <div className="bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6 md:p-8 border border-transparent hover:border-accent-blue/50 hover:shadow-neon-blue transition-all duration-300 overflow-hidden"> {/* Added overflow-hidden */}
-                <h2 className="text-2xl font-blender mb-6 text-accent-blue">소셜 미디어</h2> {/* Use blue */}
+                <h2 className="text-2xl font-blender mb-6 text-accent-blue">
+                  <GlitchText text="소셜 미디어" intensity="low" interactive={true} />
+                </h2> {/* Use blue */}
                 
                 <div className="space-y-4">
                   {/* Instagram Link */}
@@ -395,7 +401,9 @@ const ContactPage = () => {
           {/* Newsletter Section */}
           <motion.div variants={fadeInUp} className="mt-16">
             <div className="bg-primary bg-opacity-30 backdrop-blur-sm rounded-lg p-8 text-center">
-              <h2 className="text-2xl font-blender mb-4 text-white">뉴스레터 구독</h2>
+              <h2 className="text-2xl font-blender mb-4 text-white">
+                <GlitchText text="뉴스레터 구독" intensity="low" interactive={true} />
+              </h2>
               <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
                 삼각전파사의 최신 소식, 공연 일정, 새 음악 발매 소식을 가장 먼저 받아보세요.
               </p>

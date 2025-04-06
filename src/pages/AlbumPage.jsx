@@ -159,7 +159,9 @@ const AlbumPage = () => {
               animate="animate"
             >
               <motion.div variants={fadeInUp} className="mb-12">
-                <h2 className="text-2xl font-blender mb-6 text-accent-blue">앨범 소개</h2> {/* Use blue */}
+                <h2 className="text-2xl font-blender mb-6 text-accent-blue">
+                  <GlitchText text="앨범 소개" intensity="low" interactive={true} />
+                </h2> {/* Use blue */}
                 {albumData.album.description.split('\n\n').map((paragraph, index) => (
                   <p key={index} className={`mb-4 ${index === 2 ? 'text-accent-magenta font-medium text-lg' : 'text-gray-300'}`}> {/* Use magenta */}
                     {paragraph}
@@ -168,7 +170,9 @@ const AlbumPage = () => {
               </motion.div>
               
               <motion.div variants={fadeInUp}>
-                <h2 className="text-2xl font-blender mb-6 text-accent-blue">트랙리스트</h2> {/* Use blue */}
+                <h2 className="text-2xl font-blender mb-6 text-accent-blue">
+                  <GlitchText text="트랙리스트" intensity="low" interactive={true} />
+                </h2> {/* Use blue */}
                 <div className="space-y-4">
                   {albumData.album.tracks.map((track, index) => (
                     // Wrap the entire track item with Link

@@ -88,7 +88,9 @@ const ArtistPage = () => {
             </motion.div>
             
             <motion.div variants={fadeInUp} className="lg:col-span-2">
-              <h2 className="text-2xl font-blender mb-6 text-accent-blue">아티스트 소개</h2> {/* Use blue */}
+              <h2 className="text-2xl font-blender mb-6 text-accent-blue">
+                <GlitchText text="아티스트 소개" intensity="low" interactive={true} />
+              </h2> {/* Use blue */}
               <div className="space-y-4 text-gray-300">
                 {/* Removed critic intro line */}
                 <p>
@@ -104,7 +106,9 @@ const ArtistPage = () => {
               </div>
               
               {/* 음악적 철학 섹션은 유지하거나 필요에 따라 수정/제거 가능 */}
-              <h2 className="text-2xl font-blender mb-6 mt-12 text-accent-blue">음악적 철학</h2> {/* Use blue */}
+              <h2 className="text-2xl font-blender mb-6 mt-12 text-accent-blue">
+                <GlitchText text="음악적 철학" intensity="low" interactive={true} />
+              </h2> {/* Use blue */}
               <div className="space-y-6 text-gray-300">
                 <div>
                   <h3 className="text-xl font-blender mb-2 text-white">1. 실험성과 정치성의 융합</h3>
@@ -139,7 +143,9 @@ const ArtistPage = () => {
           
           {/* SF Writer Section */}
           <motion.div variants={fadeInUp} className="mb-16">
-            <h2 className="text-2xl font-blender mb-6 text-accent-blue">SF 작가로서의 활동</h2> {/* Use blue */}
+            <h2 className="text-2xl font-blender mb-6 text-accent-blue">
+              <GlitchText text="SF 작가로서의 활동" intensity="low" interactive={true} />
+            </h2> {/* Use blue */}
             <div className="bg-primary-dark bg-opacity-50 backdrop-blur-sm p-6 rounded-lg overflow-hidden"> {/* Added overflow-hidden */}
               <p className="text-gray-300 mb-4">
                 삼각전파사는 SF작가 장호진으로도 활동하며, 문학과 음악 두 영역을 넘나드는 창작 활동을 펼치고 있습니다. 2006년 과학기술 창작문예 당선으로 문학계에 데뷔한 그는 한국 SF 분야에서도 독특한 작품 세계를 구축하고 있습니다.
@@ -160,7 +166,9 @@ const ArtistPage = () => {
             >
               <div className="flex items-center mb-4">
                 <FaMusic className="text-accent-magenta text-2xl mr-3" /> {/* Use magenta */}
-                <h2 className="text-2xl font-blender text-white">디스코그래피</h2>
+                <h2 className="text-2xl font-blender text-white">
+                  <GlitchText text="디스코그래피" intensity="low" interactive={true} />
+                </h2>
               </div>
               
               <ul className="space-y-4">
@@ -182,7 +190,9 @@ const ArtistPage = () => {
             >
               <div className="flex items-center mb-4">
                 <FaBook className="text-accent-blue text-2xl mr-3" /> {/* Use blue */}
-                <h2 className="text-2xl font-blender text-white">저서</h2>
+                <h2 className="text-2xl font-blender text-white">
+                  <GlitchText text="저서" intensity="low" interactive={true} />
+                </h2>
               </div>
               
               <ul className="space-y-4">

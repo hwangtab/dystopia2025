@@ -105,6 +105,7 @@ const EventsPage = () => {
           {/* Page Header */}
           <motion.div variants={fadeInUp} className="mb-16 text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-blender mb-6">
+              {/* Keep interactive={true} for the main page title */}
               <GlitchText text="공연 일정" intensity="low" interactive={true} />
             </h1>
             {/* Applied Pretendard font, italic style, and break-keep, removed period */}
@@ -117,7 +118,9 @@ const EventsPage = () => {
 
           {/* All Events */}
           <motion.div variants={fadeInUp}>
-            <h2 className="text-2xl font-blender mb-8 text-accent-blue">전체 공연 일정</h2> {/* Use blue */}
+            <h2 className="text-2xl font-blender mb-8 text-accent-blue">
+              <GlitchText text="전체 공연 일정" intensity="low" interactive={true} />
+            </h2> {/* Use blue */}
 
             {eventsData.events.length === 0 ? (
               <div className="text-center py-16 text-gray-400">
@@ -206,7 +209,9 @@ const EventsPage = () => {
           </motion.div>
           {/* Added mb-16 to this final block */}
           <motion.div variants={fadeInUp} className="mt-16 mb-16 bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6">
-            <h2 className="text-2xl font-blender mb-4 text-white">공연 관련 안내</h2>
+            <h2 className="text-2xl font-blender mb-4 text-white">
+              <GlitchText text="공연 관련 안내" intensity="low" interactive={true} />
+            </h2>
             <div className="space-y-4 text-gray-300">
               <p>
                 <span className="text-accent-blue font-medium">티켓 예매:</span> 웹사이트에 공개된 URL을 통해 예매 가능합니다. 공연 2주 전부터 예매가 시작되며, 조기 매진될 수 있으니 서둘러 예매해주세요. {/* Use blue */}

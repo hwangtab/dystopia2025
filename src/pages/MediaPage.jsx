@@ -87,7 +87,7 @@ const MediaPage = () => {
         {/* Page Header */}
         <motion.div variants={fadeInUp} className="mb-16 text-center"> {/* Changed mb-12 to mb-16 */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-blender mb-6">
-            <GlitchText text="미디어" intensity="low" interactive={true} /> {/* Changed title back */}
+            <GlitchText text="미디어" intensity="low" interactive={true} /> {/* Set interactive to true */}
           </h1>
           {/* Applied Pretendard font, italic style, and break-keep, removed period */}
           <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep"> 
