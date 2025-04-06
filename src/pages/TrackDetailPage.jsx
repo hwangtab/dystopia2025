@@ -91,12 +91,16 @@ const TrackDetailPage = () => {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-xl font-blender mb-2 text-accent-blue">About This Track</h2> {/* Use blue */}
+              <h2 className="text-xl font-blender mb-2 text-accent-blue">
+                <GlitchText text="About This Track" intensity="low" interactive={true} />
+              </h2> {/* Use blue */}
               <p className="text-gray-300 mb-4">{track.description}</p>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-xl font-blender mb-4 text-accent-blue">Lyrics</h2> {/* Use blue */}
+              <h2 className="text-xl font-blender mb-4 text-accent-blue">
+                <GlitchText text="Lyrics" intensity="low" interactive={true} />
+              </h2> {/* Use blue */}
               <div className="bg-gray-900 bg-opacity-50 p-6 rounded-lg border border-gray-800">
                 {track.lyrics.split('\n').map((line, index) => (
                   <p key={index} className={`mb-2 ${index % 4 === 0 ? 'text-accent-magenta' : 'text-gray-300'}`}> {/* Use magenta */}
@@ -113,7 +117,9 @@ const TrackDetailPage = () => {
               <AudioPlayer track={track} /> {/* Restored */}
               
               <div className="mt-8 bg-primary bg-opacity-30 backdrop-blur-sm p-4 rounded-lg">
-                <h3 className="text-lg font-blender mb-4 text-white">Album Information</h3>
+                <h3 className="text-lg font-blender mb-4 text-white">
+                  <GlitchText text="Album Information" intensity="low" interactive={true} />
+                </h3>
                 <p className="text-gray-400 mb-2">
                   <span className="text-gray-500">Album:</span> {albumData.album.title}
                 </p>
