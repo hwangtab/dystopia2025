@@ -97,10 +97,10 @@
     ],
     "credits": [
       { "role": "프로듀서", "name": "삼각전파사" },
-      { "role": "기획", "name": "황경하" },
+      { "role": "기획", "name": "황경하", "url": "https://hwangtab.github.io/home/" },
       { "role": "레코딩", "name": "삼각전파사, 황경하" },
-      { "role": "믹싱, 마스터링", "name": "황경하 (@스튜디오 놀)" },
-      { "role": "디자인", "name": "김한샘 (@오와오와 스튜디오)" },
+      { "role": "믹싱, 마스터링", "name": "황경하 (@스튜디오 놀)", "url": "https://studionol.co.kr" },
+      { "role": "디자인", "name": "김한샘 (@오와오와 스튜디오)", "url": "https://owaowastudio.com" },
       { "role": "함께 만들어주신 분들", "name": "궁중족발, 김동석, 단패, 마조선사, 미진과 세찬, 세민, 수니야, 쓰레기통신김치, 신현준, 윤아무개, 책방난달, Andy Oonpupu, John Macclane" }
     ],
     "copyright": "© & ℗ 삼각전파사, 2025. All rights of the producer and of the owner of the work reproduced reserved. Unauthorised copying, hiring, lending, public performance and broadcasting of this recording prohibited."

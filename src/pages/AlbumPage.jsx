@@ -133,7 +133,18 @@ const AlbumPage = () => {
                 {albumData.album.credits.map((credit, index) => (
                   <div key={index} className="mb-2 last:mb-0">
                     <span className="text-gray-500">{credit.role}:</span>{' '}
-                    <span className="text-gray-300">{credit.name}</span>
+                    {credit.url ? (
+                      <a 
+                        href={credit.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-gray-300 hover:text-accent-magenta transition-colors" // Removed underline, changed hover color
+                      >
+                        {credit.name}
+                      </a>
+                    ) : (
+                      <span className="text-gray-300">{credit.name}</span>
+                    )}
                   </div>
                 ))}
               </div>
