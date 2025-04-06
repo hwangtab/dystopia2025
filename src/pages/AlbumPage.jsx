@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { motion } from 'framer-motion';
 import { FaPlay, FaInfoCircle } from 'react-icons/fa';
 
@@ -14,6 +14,7 @@ import albumData from '../data/albums.json';
 const AlbumPage = () => {
   const [selectedTrack, setSelectedTrack] = useState(null);
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false); // State for triggering autoplay
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleTrackSelect = (track, autoPlay = false) => { // Add autoPlay parameter
     setSelectedTrack(track);
@@ -204,10 +205,10 @@ const AlbumPage = () => {
                           <div 
                             className="w-10 h-10 rounded-full bg-accent-blue/20 flex items-center justify-center transition-colors z-10 relative" /* Add z-index */
                             aria-label={`View details for ${track.title}`}
-                            onClick={(e) => { 
+                            onClick={(e) => {
                               e.preventDefault(); // Prevent Link navigation
-                              e.stopPropagation(); // Stop event bubbling (though Link is removed, good practice)
-                              // Optionally add a different action here if needed, otherwise it just prevents link
+                              e.stopPropagation(); // Stop event bubbling
+                              navigate(`/album/track/${track.id}`); // Navigate to track detail page
                             }}
                           >
                             <FaInfoCircle className="text-accent-blue" /> {/* Use blue */}
