@@ -1,11 +1,15 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+import Sitemap from 'vite-plugin-sitemap'; // Import the sitemap plugin
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
   const config = {
-    plugins: [react()],
+    plugins: [
+      react(),
+      Sitemap({ hostname: 'https://www.dystopia2025.kr/' }) // Add sitemap plugin
+    ],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
