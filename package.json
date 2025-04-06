@@ -6,7 +6,7 @@
   "homepage": "https://hwangtab.github.io/dystopia2025/",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cp dist/index.html dist/404.html",
     "predeploy": "npm run build",
     "deploy": "gh-pages --dotfiles -d dist -r git@github.com:hwangtab/dystopia2025.git",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
