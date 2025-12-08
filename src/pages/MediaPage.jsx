@@ -1,14 +1,19 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaPlay } from 'react-icons/fa'; // Removed FaNewspaper, FaQuoteLeft
+import { FaPlay } from 'react-icons/fa';
 
 // Components
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
+import SEO from '../components/SEO';
+import StructuredData from '../components/StructuredData';
 
 // Data
-import mediaData from '../data/media.json'; // Use media.json for videos
-// Removed newsData import
+import mediaData from '../data/media.json';
+import newslettersData from '../data/newsletters.json';
+
+// Structured Data
+import { getCollectionPageSchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 const MediaPage = () => {
   // Removed activeTab state
@@ -68,15 +73,31 @@ const MediaPage = () => {
         }
       }
       // Return original URL if it's not a standard YouTube watch URL or ID extraction fails
-      return url; 
+      return url;
     } catch (error) {
       console.error("Error parsing video URL:", error);
       return url; // Return original URL on error
     }
   };
-  
+
   return (
-    <ParallaxBackground className="pt-24 pb-16"> {/* Removed min-h-screen */}
+    <ParallaxBackground className="min-h-screen pt-24 pb-16">
+      {/* SEO Meta Tags */}
+      <SEO
+        title="미디어 | 삼각전파사"
+        description="삼각전파사의 뉴스레터, 미디어 자료, 프레스 키트, 인터뷰 및 세미나 정보를 확인하세요."
+        keywords="삼각전파사 뉴스레터, 미디어 자료, 프레스 키트, 인터뷰"
+        canonical="/media"
+      />
+
+      {/* Structured Data */}
+      <StructuredData data={getCollectionPageSchema()} />
+      <StructuredData data={getBreadcrumbSchema([
+        { name: '홈', path: '/' },
+        { name: '미디어', path: '/media' }
+      ])} />
+
+      {/* Main Content */}
       <motion.div
         className="container-custom mx-auto"
         initial="initial"
@@ -90,7 +111,7 @@ const MediaPage = () => {
             <GlitchText text="미디어" intensity="low" interactive={true} /> {/* Set interactive to true */}
           </h1>
           {/* Applied Pretendard font, italic style, and break-keep, removed period */}
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep"> 
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep">
             삼각전파사의 뮤직비디오, 라이브 클립, 티저 등 다양한 영상을 감상하세요
           </p>
         </motion.div>
@@ -164,9 +185,9 @@ const MediaPage = () => {
                     )}
                     {/* Optional: Add video type badge */}
                     {video.type && (
-                       <div className="absolute top-2 left-2 bg-accent-blue px-2 py-1 rounded text-xs text-white">
-                         {video.type}
-                       </div>
+                      <div className="absolute top-2 left-2 bg-accent-blue px-2 py-1 rounded text-xs text-white">
+                        {video.type}
+                      </div>
                     )}
                   </div>
                   <div className="p-4">

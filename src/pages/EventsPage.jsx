@@ -5,9 +5,14 @@ import { FaCalendarAlt, FaMapMarkerAlt, FaTicketAlt, FaChevronDown, FaChevronUp 
 // Components
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
+import SEO from '../components/SEO';
+import StructuredData from '../components/StructuredData';
 
 // Data
 import eventsData from '../data/events.json';
+
+// Structured Data
+import { getEventSchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 const EventsPage = () => {
   const [expandedEvent, setExpandedEvent] = useState(null);
@@ -87,9 +92,27 @@ const EventsPage = () => {
 
     return date.toLocaleDateString('ko-KR', options);
   };
-  
+
   return (
-    <ParallaxBackground className="pt-24 pb-16"> {/* Removed min-h-screen */}
+    <ParallaxBackground className="min-h-screen pt-24 pb-16">
+      {/* SEO Meta Tags */}
+      <SEO
+        title="공연 일정 | 삼각전파사"
+        description="삼각전파사의 공연 및 이벤트 일정. Dystopia 2025 앨범 관련 라이브 공연, 페스티벌, 음악 이벤트 정보를 확인하세요."
+        keywords="삼각전파사 공연, 라이브, 페스티벌, 이벤트, 전자음악 공연, 콘서트"
+        canonical="/events"
+      />
+
+      {/* Structured Data - Multiple Events */}
+      {eventsData.events.slice(0, 3).map((event) => (
+        <StructuredData key={event.id} data={getEventSchema(event)} />
+      ))}
+      <StructuredData data={getBreadcrumbSchema([
+        { name: '홈', path: '/' },
+        { name: '공연 일정', path: '/events' }
+      ])} />
+
+      {/* Main Content */}
       <motion.div
         className="container-custom mx-auto"
         initial="initial"
@@ -109,7 +132,7 @@ const EventsPage = () => {
               <GlitchText text="공연 일정" intensity="low" interactive={true} />
             </h1>
             {/* Applied Pretendard font, italic style, and break-keep, removed period */}
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep"> 
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep">
               삼각전파사의 'Dystopia 2025' 앨범 발매 기념 공연 및 전국 투어 일정을 확인하세요
             </p>
           </motion.div>
@@ -138,17 +161,17 @@ const EventsPage = () => {
                       {groupedEvents[month].map((event) => (
                         <div key={event.id} className="p-0 overflow-hidden"> {/* Added overflow-hidden */}
                           {/* Added hover effects to the clickable div */}
-                          <div 
+                          <div
                             className="p-4 cursor-pointer hover:bg-primary-dark hover:bg-opacity-30 transition-all duration-300 ease-in-out border border-transparent hover:border-accent-magenta/50 hover:shadow-neon-magenta" // Reverted to magenta neon
                             onClick={() => toggleEvent(event.id)}
                           >
                             <div className="flex justify-between items-center">
-                            <div className="flex items-start">
-                              <div className="w-16 h-16 flex flex-col items-center justify-center bg-primary-dark rounded-lg mr-4 text-center border border-accent-blue/20"> {/* Add subtle border */}
-                                <span className="text-2xl font-blender text-accent-blue"> {/* Use blue */}
-                                  {new Date(event.date).getDate()}
-                                </span>
-                                <span className="text-xs text-gray-400">
+                              <div className="flex items-start">
+                                <div className="w-16 h-16 flex flex-col items-center justify-center bg-primary-dark rounded-lg mr-4 text-center border border-accent-blue/20"> {/* Add subtle border */}
+                                  <span className="text-2xl font-blender text-accent-blue"> {/* Use blue */}
+                                    {new Date(event.date).getDate()}
+                                  </span>
+                                  <span className="text-xs text-gray-400">
                                     {new Date(event.date).toLocaleDateString('ko-KR', { weekday: 'short' })}
                                   </span>
                                 </div>
@@ -156,7 +179,7 @@ const EventsPage = () => {
                                   <h4 className="text-lg font-medium text-white">{event.title}</h4>
                                   {/* Use event.time directly */}
                                   <p className="text-gray-400 text-sm">
-                                    {event.time} | {event.venue}
+                                    {event.time} | {event.location}
                                   </p>
                                 </div>
                               </div>
@@ -191,7 +214,7 @@ const EventsPage = () => {
                                   href={event.tickets.bookingLink}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                              className="inline-flex items-center text-accent-blue hover:text-accent-magenta transition-colors" /* Use blue, magenta hover */
+                                  className="inline-flex items-center text-accent-blue hover:text-accent-magenta transition-colors" /* Use blue, magenta hover */
                                 >
                                   <FaTicketAlt className="mr-2" />
                                   티켓 예매하기
@@ -207,7 +230,7 @@ const EventsPage = () => {
               </div>
             )}
           </motion.div> {/* End of "All Events" container */}
-          
+
           {/* 공연 관련 안내 Section */}
           <motion.div variants={fadeInUp} className="mb-16 bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6"> {/* Removed mt-16 */}
             <h2 className="text-2xl font-blender mb-4 text-accent-blue"> {/* Changed text-white to text-accent-blue */}

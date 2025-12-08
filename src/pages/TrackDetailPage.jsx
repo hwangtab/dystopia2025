@@ -7,9 +7,14 @@ import { FaArrowLeft } from 'react-icons/fa';
 import AudioPlayer from '../components/AudioPlayer';
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
+import SEO from '../components/SEO';
+import StructuredData from '../components/StructuredData';
 
 // Data
 import albumData from '../data/albums.json';
+
+// Structured Data
+import { getMusicRecordingSchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 const TrackDetailPage = () => {
   const { trackId } = useParams();
@@ -61,6 +66,28 @@ const TrackDetailPage = () => {
 
   return (
     <ParallaxBackground className="min-h-screen pt-24 pb-16">
+      {/* SEO Meta Tags */}
+      {track && (
+        <>
+          <SEO
+            title={`${track.title} - Dystopia 2025 | 삼각전파사`}
+            description={track.description || `${track.title} - 삼각전파사의 Dystopia 2025 앨범 수록곡. ${track.theme} 테마의 실험적 전자음악.`}
+            keywords={`${track.title}, Dystopia 2025, 삼각전파사, ${track.theme}, 실험전자음악, 전자음악`}
+            ogType="music.song"
+            canonical={`/album/track/${track.id}`}
+          />
+
+          {/* Structured Data */}
+          <StructuredData data={getMusicRecordingSchema(track, albumData)} />
+          <StructuredData data={getBreadcrumbSchema([
+            { name: '홈', path: '/' },
+            { name: '앨범', path: '/album' },
+            { name: track.title, path: `/album/track/${track.id}` }
+          ])} />
+        </>
+      )}
+
+      {/* Main Content */}
       <motion.div
         className="container-custom mx-auto"
         initial="initial"
@@ -115,7 +142,7 @@ const TrackDetailPage = () => {
           <div className="lg:col-span-1">
             <div className="sticky top-24">
               <AudioPlayer track={track} /> {/* Restored */}
-              
+
               <div className="mt-8 bg-primary bg-opacity-30 backdrop-blur-sm p-4 rounded-lg">
                 <h3 className="text-lg font-blender mb-4 text-white">
                   <GlitchText text="Album Information" intensity="low" interactive={true} />

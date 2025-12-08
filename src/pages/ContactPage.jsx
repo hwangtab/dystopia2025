@@ -1,11 +1,16 @@
-import { useState, useRef } from 'react'; // Import useRef
-import emailjs from '@emailjs/browser'; // Import emailjs
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { FaEnvelope, FaInstagram, FaYoutube, FaBandcamp, FaSpotify, FaTwitter } from 'react-icons/fa';
+import emailjs from '@emailjs/browser';
+import { FaInstagram, FaEnvelope, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 // Components
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
+import SEO from '../components/SEO';
+import StructuredData from '../components/StructuredData';
+
+// Structured Data
+import { getContactPageSchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 const ContactPage = () => {
   const formRef = useRef(); // Ref for the main contact form
@@ -69,31 +74,31 @@ const ContactPage = () => {
 
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
       .then((response) => {
-         console.log('SUCCESS!', response.status, response.text);
-         setContactFormStatus({
-           submitted: true,
-           success: true,
-           message: '메시지가 성공적으로 전송되었습니다. 빠른 시일 내에 답변 드리겠습니다.',
-           loading: false
-         });
-         // Reset form on success
-         setFormData({
-           name: '',
-           email: '',
-           phone: '',
-           service: '',
-           subject: '',
-           message: '',
-           newsletter: true
-         });
+        console.log('SUCCESS!', response.status, response.text);
+        setContactFormStatus({
+          submitted: true,
+          success: true,
+          message: '메시지가 성공적으로 전송되었습니다. 빠른 시일 내에 답변 드리겠습니다.',
+          loading: false
+        });
+        // Reset form on success
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: '',
+          subject: '',
+          message: '',
+          newsletter: true
+        });
       }, (error) => {
-         console.log('FAILED...', error);
-         setContactFormStatus({
-           submitted: true,
-           success: false,
-           message: `메시지 전송에 실패했습니다: ${error.text || '서버 오류'}. 잠시 후 다시 시도해주세요.`,
-           loading: false
-         });
+        console.log('FAILED...', error);
+        setContactFormStatus({
+          submitted: true,
+          success: false,
+          message: `메시지 전송에 실패했습니다: ${error.text || '서버 오류'}. 잠시 후 다시 시도해주세요.`,
+          loading: false
+        });
       });
   };
 
@@ -134,16 +139,16 @@ const ContactPage = () => {
   // Animation variants
   const pageVariants = {
     initial: { opacity: 0 },
-    animate: { 
+    animate: {
       opacity: 1,
       transition: { duration: 0.5, ease: "easeOut" }
     },
-    exit: { 
+    exit: {
       opacity: 0,
       transition: { duration: 0.5, ease: "easeIn" }
     }
   };
-  
+
   const staggerContainer = {
     animate: {
       transition: {
@@ -151,18 +156,34 @@ const ContactPage = () => {
       }
     }
   };
-  
+
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       y: 0,
       transition: { duration: 0.5, ease: "easeOut" }
     }
   };
-  
+
   return (
-    <ParallaxBackground className="pt-24 pb-16"> {/* Removed min-h-screen */}
+    <ParallaxBackground className="min-h-screen pt-24 pb-16">
+      {/* SEO Meta Tags */}
+      <SEO
+        title="문의하기 | 삼각전파사"
+        description="삼각전파사에게 문의하세요. 공연 문의, 언론 보도, 협업 제안 및 뉴스레터 구독을 할 수 있습니다."
+        keywords="삼각전파사 문의, 공연 문의, 연락처, 뉴스레터 구독"
+        canonical="/contact"
+      />
+
+      {/* Structured Data */}
+      <StructuredData data={getContactPageSchema()} />
+      <StructuredData data={getBreadcrumbSchema([
+        { name: '홈', path: '/' },
+        { name: '문의하기', path: '/contact' }
+      ])} />
+
+      {/* Main Content */}
       <motion.div
         className="container-custom mx-auto"
         initial="initial"
@@ -181,11 +202,11 @@ const ContactPage = () => {
               <GlitchText text="연락하기" intensity="low" interactive={true} />
             </h1>
             {/* Applied Pretendard font, italic style, and break-keep, removed period */}
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep"> 
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep">
               삼각전파사에게 메시지를 보내거나 뉴스레터를 구독하세요
             </p>
           </motion.div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Contact Form */}
             <motion.div variants={fadeInUp} className="lg:col-span-2">
@@ -193,17 +214,16 @@ const ContactPage = () => {
                 <h2 className="text-2xl font-blender mb-6 text-accent-blue">
                   <GlitchText text="메시지 보내기" intensity="low" interactive={true} />
                 </h2> {/* Use blue */}
-                
+
                 {/* Display Contact Form Success/Error Messages */}
                 {contactFormStatus.submitted && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`p-4 rounded-lg mb-6 border ${
-                      contactFormStatus.success
+                    className={`p-4 rounded-lg mb-6 border ${contactFormStatus.success
                         ? 'bg-accent-green/10 border-accent-green text-accent-green'
                         : 'bg-accent-pink/10 border-accent-pink text-accent-pink'
-                    }`}
+                      }`}
                   >
                     {contactFormStatus.message}
                   </motion.div>
@@ -211,7 +231,7 @@ const ContactPage = () => {
 
                 {/* Hide form on successful submission */}
                 {!(contactFormStatus.submitted && contactFormStatus.success) && (
-                   <form ref={formRef} onSubmit={handleContactSubmit} className="space-y-6">
+                  <form ref={formRef} onSubmit={handleContactSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Name Input */}
                       <div>
@@ -249,7 +269,7 @@ const ContactPage = () => {
                           value={formData.phone}
                           onChange={handleChange}
                           className="w-full bg-gray-800 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-blue transition-all duration-300"
-                          // Not making required, adjust if needed
+                        // Not making required, adjust if needed
                         />
                       </div>
                       {/* Subject Selection (Changed from Inquiry Type) */}
@@ -281,12 +301,12 @@ const ContactPage = () => {
                         type="text"
                         id="subject"
                         name="subject"
-                          value={formData.subject}
-                          onChange={handleChange}
-                          className="w-full bg-gray-800 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-blue transition-all duration-300"
-                          required
-                        />
-                      </div>
+                        value={formData.subject}
+                        onChange={handleChange}
+                        className="w-full bg-gray-800 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-blue transition-all duration-300"
+                        required
+                      />
+                    </div>
 
                     {/* Message Textarea */}
                     <div>
@@ -294,13 +314,13 @@ const ContactPage = () => {
                       <textarea
                         id="message"
                         name="message"
-                          value={formData.message}
-                          onChange={handleChange}
-                          rows="5"
-                          className="w-full bg-gray-800 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-blue transition-all duration-300"
-                          required
-                        ></textarea>
-                      </div>
+                        value={formData.message}
+                        onChange={handleChange}
+                        rows="5"
+                        className="w-full bg-gray-800 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-blue transition-all duration-300"
+                        required
+                      ></textarea>
+                    </div>
 
                     {/* Newsletter Checkbox */}
                     <div className="flex items-center">
@@ -337,7 +357,7 @@ const ContactPage = () => {
                 )}
               </div>
             </motion.div>
-            
+
             {/* Contact Info */}
             <motion.div variants={fadeInUp} className="lg:col-span-1">
               {/* Reverted hover effects to blue neon */}
@@ -345,14 +365,14 @@ const ContactPage = () => {
                 <h2 className="text-2xl font-blender mb-6 text-accent-blue">
                   <GlitchText text="연락처" intensity="low" interactive={true} />
                 </h2> {/* Use blue */}
-                
+
                 <div className="space-y-4">
                   <div className="flex items-start">
                     <FaEnvelope className="text-accent-magenta mt-1 mr-3 flex-shrink-0" /> {/* Use magenta */}
                     <div>
                       {/* Removed the h3 "이메일" label */}
-                      <a 
-                        href="mailto:takemet9@gmail.com" 
+                      <a
+                        href="mailto:takemet9@gmail.com"
                         className="text-gray-300 hover:text-accent-magenta transition-colors break-all" /* Added break-all for long emails */
                       >
                         takemet9@gmail.com
@@ -361,34 +381,34 @@ const ContactPage = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Reverted hover effects to blue neon */}
               <div className="bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6 md:p-8 border border-transparent hover:border-accent-blue/50 hover:shadow-neon-blue transition-all duration-300 overflow-hidden"> {/* Added overflow-hidden */}
                 <h2 className="text-2xl font-blender mb-6 text-accent-blue">
                   <GlitchText text="소셜 미디어" intensity="low" interactive={true} />
                 </h2> {/* Use blue */}
-                
+
                 <div className="space-y-4">
                   {/* Instagram Link */}
-                  <a 
-                    href="https://www.instagram.com/hojin7576/" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href="https://www.instagram.com/hojin7576/"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center text-gray-300 hover:text-accent-magenta transition-colors hover:drop-shadow-[0_0_5px_var(--color-accent-magenta)]"
                   >
                     <FaInstagram className="mr-3" />
                     <span>@hojin7576</span>
                   </a>
-                  
+
                   {/* Facebook Link Added */}
-                   <a 
-                    href="https://www.facebook.com/trianglewaver23" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href="https://www.facebook.com/trianglewaver23"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center text-gray-300 hover:text-accent-magenta transition-colors hover:drop-shadow-[0_0_5px_var(--color-accent-magenta)]"
                   >
                     {/* Placeholder SVG - Import FaFacebook if needed */}
-                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="currentColor" className="mr-3"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="currentColor" className="mr-3"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z" /></svg>
                     <span>Triangle Waver</span>
                   </a>
 
@@ -397,7 +417,7 @@ const ContactPage = () => {
               </div>
             </motion.div>
           </div>
-          
+
           {/* Newsletter Section */}
           <motion.div variants={fadeInUp} className="mt-16">
             <div className="bg-primary bg-opacity-30 backdrop-blur-sm rounded-lg p-8 text-center">
@@ -409,19 +429,18 @@ const ContactPage = () => {
               </p>
 
               {/* Newsletter Form Status */}
-               {newsletterStatus.submitted && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`p-3 rounded-lg mb-4 max-w-lg mx-auto text-sm border ${
-                      newsletterStatus.success
-                        ? 'bg-accent-green/10 border-accent-green text-accent-green'
-                        : 'bg-accent-pink/10 border-accent-pink text-accent-pink'
+              {newsletterStatus.submitted && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`p-3 rounded-lg mb-4 max-w-lg mx-auto text-sm border ${newsletterStatus.success
+                      ? 'bg-accent-green/10 border-accent-green text-accent-green'
+                      : 'bg-accent-pink/10 border-accent-pink text-accent-pink'
                     }`}
-                  >
-                    {newsletterStatus.message}
-                  </motion.div>
-                )}
+                >
+                  {newsletterStatus.message}
+                </motion.div>
+              )}
 
               {/* Hide newsletter form on successful submission */}
               {!(newsletterStatus.submitted && newsletterStatus.success) && (
@@ -440,10 +459,10 @@ const ContactPage = () => {
                     disabled={newsletterStatus.loading}
                   >
                     {newsletterStatus.loading ? (
-                       <svg className="animate-spin h-5 w-5 text-primary-dark mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                       </svg>
+                      <svg className="animate-spin h-5 w-5 text-primary-dark mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
                     ) : (
                       '구독하기'
                     )}

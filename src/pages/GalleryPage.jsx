@@ -5,6 +5,14 @@ import { FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 // Components
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
+import SEO from '../components/SEO';
+import StructuredData from '../components/StructuredData';
+
+// Data
+import galleryData from '../data/gallery.json';
+
+// Structured Data
+import { getImageGallerySchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 // Dynamically import images from the src/assets/images directory
 // Target only .jpg files
@@ -99,7 +107,23 @@ const GalleryPage = () => {
   };
 
   return (
-    <ParallaxBackground className="pt-24 pb-16"> {/* Removed min-h-screen */}
+    <ParallaxBackground className="min-h-screen pt-24 pb-16">
+      {/* SEO Meta Tags */}
+      <SEO
+        title="갤러리 | 삼각전파사"
+        description="삼각전파사의 Dystopia 2025 관련 이미지 갤러리. 앨범 아트워크, 공연 사진, 프로모 이미지 등을 확인하세요."
+        keywords="삼각전파사 갤러리, Dystopia 2025 이미지, 앨범 커버, 공연 사진, 프로모 이미지"
+        canonical="/gallery"
+      />
+
+      {/* Structured Data */}
+      <StructuredData data={getImageGallerySchema(galleryData.images)} />
+      <StructuredData data={getBreadcrumbSchema([
+        { name: '홈', path: '/' },
+        { name: '갤러리', path: '/gallery' }
+      ])} />
+
+      {/* Main Content */}
       <motion.div
         className="container-custom mx-auto"
         initial="initial"
@@ -113,7 +137,7 @@ const GalleryPage = () => {
             <GlitchText text="갤러리" intensity="low" interactive={true} />
           </h1>
           {/* Applied Pretendard font, italic style, and break-keep, removed period */}
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep"> 
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep">
             삼각전파사의 'Dystopia 2025' 앨범 아트워크, 공연 사진, 뮤직비디오 스틸컷을 감상하세요
           </p>
         </motion.div>
