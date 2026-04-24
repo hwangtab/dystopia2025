@@ -49,16 +49,15 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-    <!-- Preload LCP image for the hero. We preload AVIF because every
-         crawler that runs Lighthouse (Chromium-based) will pick AVIF over
-         WebP via <picture>, so preloading WebP would be a wasted hint.
-         Browsers without AVIF (Safari <16, etc.) just ignore this preload
-         and fall back to the WebP/JPG sources from <picture>. -->
+    <!-- Preload LCP image for the hero. Original hero.jpg is 1181x1181;
+         upscaled 1280/1920 variants collapse back to 1181 bytes-identical,
+         so listing them in srcset wastes the browser's picking logic.
+         We serve 768w for mobile and the 1181 original for everything else. -->
     <link
       rel="preload"
       as="image"
       href="/images/hero-768.avif"
-      imagesrcset="/images/hero-768.avif 768w, /images/hero-1280.avif 1280w, /images/hero-1920.avif 1920w"
+      imagesrcset="/images/hero-768.avif 768w, /images/hero.avif 1181w"
       imagesizes="100vw"
       type="image/avif"
       fetchpriority="high"

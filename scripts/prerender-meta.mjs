@@ -128,6 +128,21 @@ function rewrite(templateHtml, meta) {
     meta.og.alt
   );
 
+  // Inject per-route JSON-LD directly before </head>. Non-JS crawlers
+  // (LinkedIn, Naver, most LLM scrapers) only parse raw HTML, so shipping
+  // structured data purely via Helmet at runtime is invisible to them.
+  // The `</` inside a JSON string is escaped to avoid prematurely closing
+  // the <script> element per the HTML spec.
+  if (Array.isArray(meta.jsonLd) && meta.jsonLd.length > 0) {
+    const scripts = meta.jsonLd
+      .map((schema) => {
+        const body = JSON.stringify(schema).replace(/<\/(script)/gi, '<\\/$1');
+        return `<script type="application/ld+json">${body}</script>`;
+      })
+      .join('\n    ');
+    html = html.replace('</head>', `    ${scripts}\n  </head>`);
+  }
+
   return html;
 }
 
@@ -137,7 +152,10 @@ function rewrite(templateHtml, meta) {
 // replaceAttr would otherwise rewrite the first match — the commented one).
 // The comments are developer-only; removing them from production HTML is
 // harmless and shaves a few bytes.
-const stripHtmlComments = (html) => html.replace(/<!--[\s\S]*?-->/g, '');
+// Remove HTML comments along with the surrounding whitespace so that
+// deleted blocks don't leave empty lines behind.
+const stripHtmlComments = (html) =>
+  html.replace(/[ \t]*<!--[\s\S]*?-->[ \t]*\n?/g, '');
 
 async function main() {
   const templatePath = path.join(DIST, 'index.html');
@@ -181,6 +199,20 @@ async function main() {
     '<meta name="robots" content="noindex, follow" />'
   );
   await fs.writeFile(path.join(DIST, '404.html'), notFound, 'utf-8');
+
+  // Trim millisecond precision from sitemap <lastmod>. The plugin accepts
+  // our YYYY-MM-DD inputs but re-serialises via Date#toISOString, which
+  // emits `.000Z`. Strict sitemap validators warn on that, so we strip it.
+  const sitemapPath = path.join(DIST, 'sitemap.xml');
+  try {
+    const xml = await fs.readFile(sitemapPath, 'utf-8');
+    const cleaned = xml.replace(/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})\.\d{3}Z/g, '$1Z');
+    if (cleaned !== xml) {
+      await fs.writeFile(sitemapPath, cleaned, 'utf-8');
+    }
+  } catch {
+    // Sitemap may not exist during partial builds; non-fatal.
+  }
 
   console.log(`[prerender-meta] wrote ${written} route html files + 404.html`);
 }

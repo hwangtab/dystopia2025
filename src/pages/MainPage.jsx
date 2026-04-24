@@ -95,7 +95,7 @@ const MainPage = () => {
             src="/images/hero.jpg"
             alt=""
             aria-hidden="true"
-            widths={[768, 1280, 1920]}
+            widths={[768]}
             sizes="100vw"
             priority
             imgClassName="w-full h-full object-cover"

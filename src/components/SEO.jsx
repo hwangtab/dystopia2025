@@ -63,9 +63,11 @@ const SEO = ({
             <meta name="twitter:image" content={ogImage} />
             <meta name="twitter:image:alt" content={ogImageAlt || `${title} 대표 이미지`} />
 
-            {/* Additional Meta for AI Crawlers */}
+            {/* Additional Meta for AI Crawlers.
+                theme-color lives in index.html only — Helmet duplicates
+                don't reliably replace existing <meta> with the same name,
+                so the static value (#050818) stays the single source. */}
             <meta name="application-name" content="Dystopia 2025" />
-            <meta name="theme-color" content="#1a1a2e" />
         </Helmet>
     );
 };
