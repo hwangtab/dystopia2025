@@ -5,8 +5,8 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- SEO Meta Tags -->
-    <title>Dystopia 2025 - 삼각전파사</title>
-    <meta name="description" content="삼각전파사의 공식 웹사이트. Dystopia 2025 앨범 정보, 아티스트 소개, 공연 소식 등을 확인하세요." />
+    <title>Dystopia 2025 - 삼각전파사 | 실험전자음악</title>
+    <meta name="description" content="삼각전파사의 정규 1집 'Dystopia 2025'. 거대 서사가 아닌 해체된 파편들의 콜라주로 이 시대의 모순을 표현하는 실험전자음악 앨범." />
     <meta name="keywords" content="삼각전파사, Triangle Waver, Dystopia 2025, 실험전자음악, 아방가르드, 한국 전자음악" />
     <meta name="author" content="삼각전파사 (Triangle Waver)" />
     <meta name="naver-site-verification" content="59f4133656e57c3111c2c8693b528b8063f888e5" />
@@ -15,8 +15,8 @@
     <link rel="canonical" href="https://www.dystopia2025.kr/" />
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Dystopia 2025 - 삼각전파사" />
-    <meta property="og:description" content="삼각전파사의 공식 웹사이트. Dystopia 2025 앨범 정보, 아티스트 소개, 공연 소식 등을 확인하세요." />
+    <meta property="og:title" content="Dystopia 2025 - 삼각전파사 | 실험전자음악" />
+    <meta property="og:description" content="삼각전파사의 정규 1집 'Dystopia 2025'. 거대 서사가 아닌 해체된 파편들의 콜라주로 이 시대의 모순을 표현하는 실험전자음악 앨범." />
     <meta property="og:image" content="https://www.dystopia2025.kr/images/hero.jpg" />
     <meta property="og:image:width" content="1181" />
     <meta property="og:image:height" content="1181" />
@@ -29,8 +29,8 @@
 
     <!-- Twitter Card Meta Tags (square image → summary, not summary_large_image) -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Dystopia 2025 - 삼각전파사" />
-    <meta name="twitter:description" content="삼각전파사의 공식 웹사이트. Dystopia 2025 앨범 정보, 아티스트 소개, 공연 소식 등을 확인하세요." />
+    <meta name="twitter:title" content="Dystopia 2025 - 삼각전파사 | 실험전자음악" />
+    <meta name="twitter:description" content="삼각전파사의 정규 1집 'Dystopia 2025'. 거대 서사가 아닌 해체된 파편들의 콜라주로 이 시대의 모순을 표현하는 실험전자음악 앨범." />
     <meta name="twitter:image" content="https://www.dystopia2025.kr/images/hero.jpg" />
     <meta name="twitter:image:alt" content="삼각전파사 Dystopia 2025 앨범 커버" />
 
@@ -47,18 +47,20 @@
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-    <!-- Preload LCP image for the hero. The mobile-first variant is small
-         enough to win the priority race; bigger viewports get the larger
-         srcset entries via <picture>. -->
+    <!-- Preload LCP image for the hero. We preload AVIF because every
+         crawler that runs Lighthouse (Chromium-based) will pick AVIF over
+         WebP via <picture>, so preloading WebP would be a wasted hint.
+         Browsers without AVIF (Safari <16, etc.) just ignore this preload
+         and fall back to the WebP/JPG sources from <picture>. -->
     <link
       rel="preload"
       as="image"
-      href="/images/hero-768.webp"
-      imagesrcset="/images/hero-768.webp 768w, /images/hero-1280.webp 1280w, /images/hero-1920.webp 1920w"
+      href="/images/hero-768.avif"
+      imagesrcset="/images/hero-768.avif 768w, /images/hero-1280.avif 1280w, /images/hero-1920.avif 1920w"
       imagesizes="100vw"
-      type="image/webp"
+      type="image/avif"
       fetchpriority="high"
     />
 
@@ -85,11 +87,11 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap"
       />
     </noscript>
-    <script type="module" crossorigin src="/assets/index-7c2c6aa6.js"></script>
+    <script type="module" crossorigin src="/assets/index-07209192.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/react-vendor-ad52c2e1.js">
     <link rel="modulepreload" crossorigin href="/assets/helmet-92d8352a.js">
     <link rel="modulepreload" crossorigin href="/assets/motion-ec7f344c.js">
-    <link rel="stylesheet" href="/assets/index-07389636.css">
+    <link rel="stylesheet" href="/assets/index-f2af00c3.css">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
   </head>
   <body>
