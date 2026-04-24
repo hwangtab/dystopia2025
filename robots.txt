@@ -3,17 +3,22 @@ User-agent: *
 Allow: /
 Disallow: /404.html
 
-# AI crawlers (explicitly allowed)
+# AI crawlers (explicitly allowed). Each group is independent in the
+# robots.txt spec, so disallow rules above are NOT inherited.
 User-agent: GPTBot
 Allow: /
+Disallow: /404.html
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /404.html
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /404.html
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /404.html
 
 Sitemap: https://www.dystopia2025.kr/sitemap.xml
