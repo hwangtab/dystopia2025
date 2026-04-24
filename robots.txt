@@ -1,4 +1,19 @@
+# https://www.dystopia2025.kr/robots.txt
 User-agent: *
+Allow: /
+Disallow: /404.html
+
+# AI crawlers (explicitly allowed)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
 Allow: /
 
 Sitemap: https://www.dystopia2025.kr/sitemap.xml

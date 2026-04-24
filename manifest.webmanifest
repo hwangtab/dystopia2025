@@ -1,0 +1,20 @@
+{
+  "name": "Dystopia 2025 - 삼각전파사",
+  "short_name": "Dystopia 2025",
+  "description": "삼각전파사의 정규 1집 Dystopia 2025 공식 웹사이트",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "lang": "ko-KR",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
