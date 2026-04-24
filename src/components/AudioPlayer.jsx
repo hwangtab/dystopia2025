@@ -297,7 +297,12 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
             setError("오디오 파일을 로드하거나 재생할 수 없습니다.");
             setIsPlaying(false);
         }}
-        crossOrigin="anonymous" // Important for MediaElementSourceNode
+        crossOrigin="anonymous"
+        // preload="none" stops Chrome/Safari from prefetching the entire
+        // ~10-22MB mp3 the moment a track page mounts. The file is fetched
+        // on the first play() call instead, which is what mobile users
+        // expect when they tap ▶.
+        preload="none"
       />
 
       {error && (

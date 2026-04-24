@@ -43,10 +43,15 @@ const TrackDetailPage = () => {
   if (!track) {
     return (
       <div className="container-custom mx-auto py-32 text-center">
-        <h1 className="text-3xl font-blender mb-4">Track Not Found</h1>
-        <p className="mb-8">The track you're looking for doesn't exist.</p>
+        <SEO
+          title="트랙을 찾을 수 없습니다 - Dystopia 2025"
+          description="요청하신 트랙을 찾을 수 없습니다."
+          noindex
+        />
+        <h1 className="text-3xl font-blender mb-4">트랙을 찾을 수 없습니다</h1>
+        <p className="mb-8">요청하신 트랙이 존재하지 않습니다.</p>
         <Link to="/album" className="btn-primary">
-          Back to Album
+          앨범으로 돌아가기
         </Link>
       </div>
     );

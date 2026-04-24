@@ -9,6 +9,7 @@ import ParallaxBackground from '../components/ParallaxBackground';
 import TypingEffect from '../components/TypingEffect';
 import SEO from '../components/SEO';
 import StructuredData from '../components/StructuredData';
+import OptimizedImage from '../components/OptimizedImage';
 
 // Data
 import albumData from '../data/albums.json';
@@ -81,16 +82,25 @@ const MainPage = () => {
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* LCP image: served via <picture> so AVIF/WebP wins for capable
+            browsers, and the responsive srcset hands mobile clients the
+            ~210KB 768w variant instead of the 2.2MB original. The parallax
+            scale/translate is kept on the wrapper, not the <img>, so the
+            browser can still hand it to the GPU. */}
         <div
-          className="absolute inset-0 z-0 opacity-30"
-          style={{
-            backgroundImage: `url('/images/hero.jpg')`, // Changed to hero image
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            // filter: 'blur(8px)', // Removed blur effect
-            transform: `scale(1.1) translateY(${scrollY * 0.1}px)`
-          }}
-        />
+          className="absolute inset-0 z-0 opacity-30 will-change-transform"
+          style={{ transform: `scale(1.1) translateY(${scrollY * 0.1}px)` }}
+        >
+          <OptimizedImage
+            src="/images/hero.jpg"
+            alt=""
+            aria-hidden="true"
+            widths={[768, 1280, 1920]}
+            sizes="100vw"
+            priority
+            imgClassName="w-full h-full object-cover"
+          />
+        </div>
 
         <div className="container-custom mx-auto relative z-10 pt-24 pb-16 text-center">
           <motion.div
@@ -186,10 +196,12 @@ const MainPage = () => {
               className="relative"
             >
               <div className="aspect-square relative overflow-hidden rounded-lg shadow-xl">
-                <img
+                <OptimizedImage
                   src="/images/hero.jpg"
-                  alt="Dystopia 2025 Album Cover"
-                  className="w-full h-full object-cover"
+                  alt="삼각전파사 정규 1집 Dystopia 2025 앨범 커버"
+                  widths={[768, 1280, 1920]}
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  imgClassName="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary-dark to-transparent opacity-60"></div>
 

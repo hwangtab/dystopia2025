@@ -10,7 +10,30 @@ import SEO from '../components/SEO';
 import StructuredData from '../components/StructuredData';
 
 // Structured Data
-import { getContactPageSchema, getBreadcrumbSchema } from '../utils/structuredData';
+import { getContactPageSchema, getBreadcrumbSchema, getFAQPageSchema } from '../utils/structuredData';
+
+const faqItems = [
+  {
+    question: '삼각전파사의 음악 장르는 무엇인가요?',
+    answer: '삼각전파사(Triangle Waver)는 실험전자음악과 아방가르드를 기반으로, 사회비평적 메시지를 전자음향으로 표현하는 한국의 독립 아티스트입니다.',
+  },
+  {
+    question: 'Dystopia 2025 앨범은 언제 발매되나요?',
+    answer: '정규 1집 Dystopia 2025는 2025년 5월 2일 공식 발매되었습니다. 전체 8곡이 수록되어 있으며, 앨범 페이지에서 트랙별 소개와 가사를 확인할 수 있습니다.',
+  },
+  {
+    question: '공연 일정은 어디서 확인할 수 있나요?',
+    answer: '삼각전파사의 모든 라이브 공연, 페스티벌, 음악 이벤트 일정은 공연 일정 페이지(/events)에서 확인할 수 있습니다. 뉴스레터를 구독하시면 가장 먼저 공지를 받아보실 수 있습니다.',
+  },
+  {
+    question: '언론 문의나 인터뷰 요청은 어떻게 하나요?',
+    answer: '문의 폼의 주제에서 “언론 문의”를 선택하시거나 인스타그램 @hojin7576로 메시지를 보내주시면 됩니다. 프레스 키트는 미디어 페이지에서 다운로드할 수 있습니다.',
+  },
+  {
+    question: '뉴스레터는 어떻게 구독하나요?',
+    answer: '이 페이지 하단의 뉴스레터 구독 폼에 이메일을 입력하시면 됩니다. 새 음악 발매, 공연 일정, 미디어 소식을 가장 먼저 받아보실 수 있으며 언제든 구독 해지가 가능합니다.',
+  },
+];
 
 const ContactPage = () => {
   const formRef = useRef(); // Ref for the main contact form
@@ -178,6 +201,7 @@ const ContactPage = () => {
 
       {/* Structured Data */}
       <StructuredData data={getContactPageSchema()} />
+      <StructuredData data={getFAQPageSchema(faqItems)} />
       <StructuredData data={getBreadcrumbSchema([
         { name: '홈', path: '/' },
         { name: '문의하기', path: '/contact' }
@@ -475,6 +499,38 @@ const ContactPage = () => {
               </p>
             </div>
           </motion.div>
+
+          {/* FAQ Section */}
+          <motion.section
+            variants={fadeInUp}
+            className="mt-16"
+            aria-labelledby="faq-heading"
+          >
+            <h2
+              id="faq-heading"
+              className="text-2xl md:text-3xl font-blender mb-8 text-center text-white"
+            >
+              <GlitchText text="자주 묻는 질문" intensity="low" interactive={true} />
+            </h2>
+            <div className="max-w-3xl mx-auto space-y-3">
+              {faqItems.map((item, i) => (
+                <details
+                  key={i}
+                  className="group bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg border border-transparent hover:border-accent-blue/40 transition-colors overflow-hidden"
+                >
+                  <summary className="cursor-pointer list-none p-5 flex justify-between items-center text-white font-medium">
+                    <span className="pr-4">{item.question}</span>
+                    <span className="text-accent-blue transition-transform group-open:rotate-45 text-xl leading-none">
+                      +
+                    </span>
+                  </summary>
+                  <div className="px-5 pb-5 text-gray-300 leading-relaxed break-keep">
+                    {item.answer}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </motion.section>
         </motion.div>
       </motion.div>
     </ParallaxBackground>

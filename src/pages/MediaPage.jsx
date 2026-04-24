@@ -7,10 +7,10 @@ import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
 import StructuredData from '../components/StructuredData';
+import OptimizedImage from '../components/OptimizedImage';
 
 // Data
 import mediaData from '../data/media.json';
-import newslettersData from '../data/newsletters.json';
 
 // Structured Data
 import { getCollectionPageSchema, getBreadcrumbSchema } from '../utils/structuredData';
@@ -87,6 +87,11 @@ const MediaPage = () => {
         title="미디어 | 삼각전파사"
         description="삼각전파사의 뉴스레터, 미디어 자료, 프레스 키트, 인터뷰 및 세미나 정보를 확인하세요."
         keywords="삼각전파사 뉴스레터, 미디어 자료, 프레스 키트, 인터뷰"
+        ogImage="https://www.dystopia2025.kr/images/2.jpg"
+        ogImageWidth={1280}
+        ogImageHeight={854}
+        ogImageAlt="삼각전파사 미디어 및 프레스 자료"
+        twitterCard="summary_large_image"
         canonical="/media"
       />
 
@@ -168,10 +173,11 @@ const MediaPage = () => {
                   onClick={() => setSelectedVideo(video)}
                 >
                   <div className="aspect-video relative overflow-hidden group">
-                    <img
-                      src={video.thumbnail || '/images/default-thumbnail.jpg'} // Add a default thumbnail
+                    <OptimizedImage
+                      src={video.thumbnail || '/images/default-thumbnail.jpg'}
                       alt={video.title}
-                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                      imgClassName="w-full h-full object-cover transition-transform group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-primary-dark bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="w-16 h-16 rounded-full bg-accent-magenta bg-opacity-80 flex items-center justify-center shadow-lg group-hover:shadow-neon-magenta">

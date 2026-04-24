@@ -37,12 +37,45 @@ export const getOrganizationSchema = () => ({
     genre: ['Experimental Electronic', 'Avant-garde', 'Electronic'],
     url: `${siteUrl}/artist`,
     image: `${siteUrl}/images/hero.jpg`,
+    logo: `${siteUrl}/favicon.svg`,
     foundingDate: '2024',
     foundingLocation: {
         '@type': 'Country',
         name: 'South Korea'
-    }
+    },
+    sameAs: [
+        'https://www.instagram.com/hojin7576/',
+        'https://www.facebook.com/trianglewaver23'
+    ]
 });
+
+/**
+ * Convert "mm:ss" or "hh:mm:ss" string to ISO 8601 duration (e.g., PT3M25S)
+ */
+const toIsoDuration = (durationStr) => {
+    if (!durationStr || typeof durationStr !== 'string') return undefined;
+    const parts = durationStr.split(':').map(Number);
+    if (parts.some(Number.isNaN)) return undefined;
+    let h = 0, m = 0, s = 0;
+    if (parts.length === 3) [h, m, s] = parts;
+    else if (parts.length === 2) [m, s] = parts;
+    else return undefined;
+    return `PT${h ? `${h}H` : ''}${m ? `${m}M` : ''}${s ? `${s}S` : ''}` || 'PT0S';
+};
+
+const sumIsoDurations = (tracks) => {
+    const totalSec = tracks.reduce((sum, t) => {
+        if (!t.duration) return sum;
+        const parts = t.duration.split(':').map(Number);
+        if (parts.length === 2) return sum + parts[0] * 60 + parts[1];
+        if (parts.length === 3) return sum + parts[0] * 3600 + parts[1] * 60 + parts[2];
+        return sum;
+    }, 0);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    return `PT${h ? `${h}H` : ''}${m ? `${m}M` : ''}${s ? `${s}S` : ''}`;
+};
 
 /**
  * Music Album Schema
@@ -58,17 +91,24 @@ export const getMusicAlbumSchema = (albumData) => ({
     },
     datePublished: albumData.album.releaseDate,
     genre: ['Experimental Electronic', 'Avant-garde'],
-    image: `${siteUrl}/images/hero.jpg`,
+    image: `${siteUrl}${albumData.album.coverImage || '/images/hero.jpg'}`,
     description: albumData.album.description,
     url: `${siteUrl}/album`,
     inLanguage: 'ko-KR',
-    albumProductionType: 'http://schema.org/StudioAlbum',
-    albumReleaseType: 'http://schema.org/AlbumRelease',
+    numTracks: albumData.album.tracks.length,
+    duration: sumIsoDurations(albumData.album.tracks),
+    copyrightYear: new Date(albumData.album.releaseDate).getFullYear(),
+    copyrightHolder: {
+        '@type': 'MusicGroup',
+        name: albumData.album.artist
+    },
+    albumProductionType: 'https://schema.org/StudioAlbum',
+    albumReleaseType: 'https://schema.org/AlbumRelease',
     track: albumData.album.tracks.map((track, index) => ({
         '@type': 'MusicRecording',
         name: track.title,
         position: index + 1,
-        duration: track.duration,
+        duration: toIsoDuration(track.duration),
         url: `${siteUrl}/album/track/${track.id}`,
         byArtist: {
             '@type': 'MusicGroup',
@@ -85,7 +125,7 @@ export const getMusicRecordingSchema = (track, albumData) => ({
     '@type': 'MusicRecording',
     name: track.title,
     description: track.description || `${albumData.album.title}의 수록곡`,
-    duration: track.duration,
+    duration: toIsoDuration(track.duration),
     url: `${siteUrl}/album/track/${track.id}`,
     byArtist: {
         '@type': 'MusicGroup',

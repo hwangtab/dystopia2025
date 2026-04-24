@@ -7,23 +7,21 @@ import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
 import StructuredData from '../components/StructuredData';
-
-// Data
-import galleryData from '../data/gallery.json';
+import OptimizedImage from '../components/OptimizedImage';
 
 // Structured Data
 import { getImageGallerySchema, getBreadcrumbSchema } from '../utils/structuredData';
 
-// Dynamically import images from the src/assets/images directory
-// Target only .jpg files
-const imageModules = import.meta.glob('/src/assets/images/*.jpg', { eager: true });
-const images = Object.keys(imageModules)
-  // No need to filter hero.jpg here if it was moved to src/assets/images
-  .sort() // Sort paths alphabetically/numerically
-  .map((path) => imageModules[path].default);
-
-// Log the loaded image paths to the console for debugging
-console.log('Loaded gallery images:', images);
+// Static manifest of gallery images. We reference public/images/* directly so
+// the build-time optimizer's WebP/AVIF siblings line up with OptimizedImage's
+// extension swap. Numeric sort keeps 1.jpg ahead of 11.jpg.
+const galleryImageNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11];
+const images = galleryImageNumbers.map((n) => `/images/${n}.jpg`);
+const galleryImagesForSchema = images.map((url, i) => ({
+  url,
+  title: `Dystopia 2025 Gallery ${i + 1}`,
+  caption: `삼각전파사 Dystopia 2025 갤러리 이미지 ${i + 1}`,
+}));
 
 const GalleryPage = () => {
   // Removed galleryImages state and useEffect
@@ -113,11 +111,16 @@ const GalleryPage = () => {
         title="갤러리 | 삼각전파사"
         description="삼각전파사의 Dystopia 2025 관련 이미지 갤러리. 앨범 아트워크, 공연 사진, 프로모 이미지 등을 확인하세요."
         keywords="삼각전파사 갤러리, Dystopia 2025 이미지, 앨범 커버, 공연 사진, 프로모 이미지"
+        ogImage="https://www.dystopia2025.kr/images/book.jpg"
+        ogImageWidth={1280}
+        ogImageHeight={945}
+        ogImageAlt="삼각전파사 Dystopia 2025 아트워크 갤러리"
+        twitterCard="summary_large_image"
         canonical="/gallery"
       />
 
       {/* Structured Data */}
-      <StructuredData data={getImageGallerySchema(galleryData.images)} />
+      <StructuredData data={getImageGallerySchema(galleryImagesForSchema)} />
       <StructuredData data={getBreadcrumbSchema([
         { name: '홈', path: '/' },
         { name: '갤러리', path: '/gallery' }
@@ -159,10 +162,11 @@ const GalleryPage = () => {
                 onClick={() => handleImageClick(imagePath, index)}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <OptimizedImage
                   src={imagePath}
-                  alt={`Gallery image ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  alt={`삼각전파사 Dystopia 2025 갤러리 이미지 ${index + 1}`}
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                  imgClassName="w-full h-full object-cover"
                 />
               </motion.div>
             ))}
@@ -237,10 +241,11 @@ const GalleryPage = () => {
                 transition={{ duration: 0.2 }}
                 onClick={(e) => e.stopPropagation()} // Prevent closing lightbox when clicking image
               >
-                <img
+                <OptimizedImage
                   src={selectedImage}
-                  alt={`Gallery image ${currentIndex + 1}`}
-                  className="max-w-full max-h-[90vh] object-contain block" /* Reverted max-h here too */
+                  alt={`삼각전파사 Dystopia 2025 갤러리 이미지 ${currentIndex + 1}`}
+                  priority
+                  imgClassName="max-w-full max-h-[90vh] object-contain block"
                 />
               </motion.div>
             </motion.div>

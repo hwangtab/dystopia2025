@@ -7,9 +7,7 @@ import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
 import StructuredData from '../components/StructuredData';
-
-// Data
-import artistData from '../data/artist.json';
+import OptimizedImage from '../components/OptimizedImage';
 
 // Structured Data
 import { getOrganizationSchema, getBreadcrumbSchema } from '../utils/structuredData';
@@ -52,6 +50,12 @@ const ArtistPage = () => {
         title="아티스트 소개 - 삼각전파사 | Triangle Waver"
         description="삼각전파사(Triangle Waver)는 한국의 실험전자음악 아티스트입니다. 음악적 실험성과 사회적 메시지를 결합하여 현대 사회의 모순을 표현합니다."
         keywords="삼각전파사, Triangle Waver, 실험전자음악 아티스트, 한국 전자음악, 아방가르드, 인디음악"
+        ogType="profile"
+        ogImage="https://www.dystopia2025.kr/images/5.jpg"
+        ogImageWidth={1280}
+        ogImageHeight={960}
+        ogImageAlt="삼각전파사 아티스트 사진"
+        twitterCard="summary_large_image"
         canonical="/artist"
       />
 
@@ -91,10 +95,12 @@ const ArtistPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
             <motion.div variants={fadeInUp} className="lg:col-span-1">
               <div className="aspect-square relative overflow-hidden rounded-lg shadow-xl mb-6">
-                <img
+                <OptimizedImage
                   src="/images/5.jpg"
                   alt="삼각전파사 (Triangle Waver)"
-                  className="w-full h-full object-cover"
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  priority
+                  imgClassName="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary-dark to-transparent opacity-60"></div>
               </div>

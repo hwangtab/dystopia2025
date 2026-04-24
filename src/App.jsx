@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'; // Import useLocation
-import { AnimatePresence, motion } from 'framer-motion'; // Import motion
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 // Static Components
 import Header from './components/Header'; // Keep static imports for always visible components
@@ -29,29 +29,32 @@ const RouteFallback = () => (
   </div>
 );
 
-// Define page transition variants with chromatic aberration effect
-const pageTransitionVariants = {
+// Define page transition variants. The chromatic-aberration SVG filter is
+// expensive on mobile (forces the entire layer through a multi-pass color
+// matrix) so we drop it under prefers-reduced-motion and keep just the
+// fade. The animated variant set is selected at render time.
+const buildPageTransition = (reduceMotion) => ({
   initial: {
     opacity: 0,
-    filter: 'url(#chromatic-aberration)', // Apply filter on initial/exit
-    // filter: 'blur(10px) saturate(1.5)', // Alternative effect
+    filter: reduceMotion ? 'none' : 'url(#chromatic-aberration)',
   },
   animate: {
     opacity: 1,
-    filter: 'none', // No filter when page is active
-    transition: { duration: 0.5, ease: 'easeOut' }
+    filter: 'none',
+    transition: { duration: reduceMotion ? 0.2 : 0.5, ease: 'easeOut' }
   },
   exit: {
     opacity: 0,
-    filter: 'url(#chromatic-aberration)', // Apply filter on initial/exit
-    // filter: 'blur(10px) saturate(0.5)', // Alternative effect
-    transition: { duration: 0.3, ease: 'easeIn' }
+    filter: reduceMotion ? 'none' : 'url(#chromatic-aberration)',
+    transition: { duration: reduceMotion ? 0.15 : 0.3, ease: 'easeIn' }
   }
-};
+});
 
 // Main App component structure
 function AppContent() {
   const location = useLocation();
+  const reduceMotion = useReducedMotion();
+  const pageTransitionVariants = buildPageTransition(reduceMotion);
 
   return (
     // Ensure the outer div takes full height
@@ -98,21 +101,24 @@ function AppContent() {
 
       <Footer />
 
-      {/* SVG Filter Definition for Chromatic Aberration */}
-      <svg width="0" height="0" style={{ position: 'absolute' }}>
-        <defs>
-          <filter id="chromatic-aberration">
-            <feColorMatrix type="matrix" result="red_" in="SourceGraphic" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
-            <feOffset in="red_" dx="-3" dy="0" result="red" />
-            <feColorMatrix type="matrix" result="green_" in="SourceGraphic" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
-            <feOffset in="green_" dx="0" dy="0" result="green" />
-            <feColorMatrix type="matrix" result="blue_" in="SourceGraphic" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
-            <feOffset in="blue_" dx="3" dy="0" result="blue" />
-            <feBlend mode="screen" in="red" in2="green" result="blend1" />
-            <feBlend mode="screen" in="blend1" in2="blue" />
-          </filter>
-        </defs>
-      </svg>
+      {/* SVG Filter Definition for Chromatic Aberration. Skipped entirely
+          under prefers-reduced-motion since nothing references it. */}
+      {!reduceMotion && (
+        <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
+          <defs>
+            <filter id="chromatic-aberration">
+              <feColorMatrix type="matrix" result="red_" in="SourceGraphic" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+              <feOffset in="red_" dx="-3" dy="0" result="red" />
+              <feColorMatrix type="matrix" result="green_" in="SourceGraphic" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+              <feOffset in="green_" dx="0" dy="0" result="green" />
+              <feColorMatrix type="matrix" result="blue_" in="SourceGraphic" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+              <feOffset in="blue_" dx="3" dy="0" result="blue" />
+              <feBlend mode="screen" in="red" in2="green" result="blend1" />
+              <feBlend mode="screen" in="blend1" in2="blue" />
+            </filter>
+          </defs>
+        </svg>
+      )}
     </div>
   );
 }
@@ -121,12 +127,11 @@ function AppContent() {
 function App() {
   const [initialLoading, setInitialLoading] = useState(true);
 
+  // Hard cap so the intro can never exceed ~1.6s, even if LoadingScreen's
+  // internal progress timer is throttled (background tab, slow CPU). The
+  // normal flow ends via onLoadingComplete; this is just a safety net.
   useEffect(() => {
-    // Keep the initial loading screen simulation
-    const timer = setTimeout(() => {
-      setInitialLoading(false);
-    }, 3000); // Keep or adjust duration as needed
-
+    const timer = setTimeout(() => setInitialLoading(false), 1600);
     return () => clearTimeout(timer);
   }, []);
 
@@ -138,8 +143,7 @@ function App() {
 
       {!initialLoading && (
         <Router>
-          <ScrollToTop /> {/* Add ScrollToTop component here */}
-          {/* Moved content into AppContent to use useLocation hook */}
+          <ScrollToTop />
           <AppContent />
         </Router>
       )}

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import GlitchText from './GlitchText'; // Import GlitchText component
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import GlitchText from './GlitchText';
 
 // Helper function to generate random scramble text for multiple lines
 // charWidth/charHeight are intentionally under-estimated so the generated text
@@ -22,40 +22,44 @@ const generateScrambleText = (width, height, charWidth = 5, charHeight = 11) => 
 const LoadingScreen = ({ onLoadingComplete }) => {
   const [progress, setProgress] = useState(0);
   const [loadingText, setLoadingText] = useState("INITIALIZING SYSTEM...");
-  const [showContent, setShowContent] = useState(false); // Controls visibility of main loading elements
-  const [isScrambling, setIsScrambling] = useState(true); // Scramble effect runs initially
-  const [scrambleText, setScrambleText] = useState(''); // Holds the scramble text
+  const [showContent, setShowContent] = useState(false);
+  const [isScrambling, setIsScrambling] = useState(true);
+  const [scrambleText, setScrambleText] = useState('');
   const intervalRef = useRef(null);
   const scrambleIntervalRef = useRef(null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     // Start showing main content almost immediately
     const showTimer = setTimeout(() => setShowContent(true), 100);
 
-    // Scramble Effect Timer (runs continuously until progress is 100)
-    const scrambleUpdateRate = 50;
-    const updateScramble = () => { // Function to update scramble text based on window size
+    const updateScramble = () => {
       setScrambleText(generateScrambleText(window.innerWidth, window.innerHeight));
     };
 
-    // Initial scramble text generation
-    updateScramble(); 
+    // Skip the per-frame scramble repaint when the user has asked for
+    // reduced motion. We still draw it once so the layout matches the
+    // standard intro, but we don't burn 20fps painting random characters.
+    updateScramble();
+    if (!reduceMotion) {
+      scrambleIntervalRef.current = setInterval(() => {
+        if (isScrambling) {
+          updateScramble();
+        } else {
+          clearInterval(scrambleIntervalRef.current);
+        }
+      }, 50);
+    }
 
-    scrambleIntervalRef.current = setInterval(() => {
-      if (isScrambling) {
-        updateScramble(); // Call the update function
-      } else {
-        clearInterval(scrambleIntervalRef.current);
-      }
-    }, scrambleUpdateRate);
-
-    // Add resize listener to update scramble on window resize
     window.addEventListener('resize', updateScramble);
 
     // Main Progress Timer (starts almost immediately)
+    // Tightened so the intro completes in roughly 1s of progress + 300ms
+    // of exit animation. Visual rhythm preserved (same status messages,
+    // same scramble overlay) while LCP is no longer blocked for ~3s.
     intervalRef.current = setInterval(() => {
       setProgress((prevProgress) => {
-        const randomIncrement = Math.random() * 5 + 1; // Smaller, more frequent increments
+        const randomIncrement = Math.random() * 8 + 6;
         const newProgress = Math.min(prevProgress + randomIncrement, 100);
 
         if (newProgress < 30) {
@@ -70,24 +74,23 @@ const LoadingScreen = ({ onLoadingComplete }) => {
 
         if (newProgress >= 100) {
           clearInterval(intervalRef.current);
-          // Add a slight delay before calling onLoadingComplete for final animation
           setTimeout(() => {
-            setIsScrambling(false); // Stop scrambling before completing
+            setIsScrambling(false);
             onLoadingComplete();
-          }, 800);
+          }, 300);
           return 100;
         }
         return newProgress;
       });
-    }, 150); // Faster interval for progress
+    }, 80);
 
     return () => {
-      clearTimeout(showTimer); // Clear show timer
+      clearTimeout(showTimer);
       clearInterval(intervalRef.current);
       clearInterval(scrambleIntervalRef.current);
-      window.removeEventListener('resize', updateScramble); // Remove resize listener
+      window.removeEventListener('resize', updateScramble);
     };
-  }, [onLoadingComplete, isScrambling]); // Add isScrambling to dependencies
+  }, [onLoadingComplete, isScrambling, reduceMotion]);
 
   const containerVariants = {
     hidden: { opacity: 0 },

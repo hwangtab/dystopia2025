@@ -9,6 +9,7 @@ import ParallaxBackground from '../components/ParallaxBackground';
 import AudioPlayer from '../components/AudioPlayer';
 import SEO from '../components/SEO';
 import StructuredData from '../components/StructuredData';
+import OptimizedImage from '../components/OptimizedImage';
 
 // Data
 import albumData from '../data/albums.json';
@@ -113,10 +114,13 @@ const AlbumPage = () => {
               transition={{ duration: 0.6 }}
             >
               <div className="aspect-square relative overflow-hidden rounded-lg shadow-xl mb-6">
-                <img
+                <OptimizedImage
                   src="/images/hero.jpg"
                   alt="Dystopia 2025 Album Cover"
-                  className="w-full h-full object-cover"
+                  widths={[768, 1280, 1920]}
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  priority
+                  imgClassName="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary-dark to-transparent opacity-60"></div>
               </div>

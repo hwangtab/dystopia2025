@@ -6,8 +6,11 @@ const SEO = ({
     description = '삼각전파사의 공식 웹사이트. Dystopia 2025 앨범 정보, 아티스트 소개, 공연 소식 등을 확인하세요.',
     keywords = '삼각전파사, Triangle Waver, Dystopia 2025, 실험전자음악, 아방가르드, 한국 전자음악',
     ogImage = 'https://www.dystopia2025.kr/images/hero.jpg',
+    ogImageWidth = 1181,
+    ogImageHeight = 1181,
+    ogImageAlt,
     ogType = 'website',
-    twitterCard = 'summary_large_image',
+    twitterCard = 'summary',
     canonical,
     noindex = false,
 }) => {
@@ -45,6 +48,9 @@ const SEO = ({
             <meta property="og:title" content={title} />
             <meta property="og:description" content={description} />
             <meta property="og:image" content={ogImage} />
+            <meta property="og:image:width" content={String(ogImageWidth)} />
+            <meta property="og:image:height" content={String(ogImageHeight)} />
+            <meta property="og:image:alt" content={ogImageAlt || `${title} 대표 이미지`} />
             <meta property="og:url" content={currentUrl} />
             <meta property="og:type" content={ogType} />
             <meta property="og:site_name" content="삼각전파사" />
@@ -55,6 +61,7 @@ const SEO = ({
             <meta name="twitter:title" content={title} />
             <meta name="twitter:description" content={description} />
             <meta name="twitter:image" content={ogImage} />
+            <meta name="twitter:image:alt" content={ogImageAlt || `${title} 대표 이미지`} />
 
             {/* Additional Meta for AI Crawlers */}
             <meta name="application-name" content="Dystopia 2025" />
@@ -68,6 +75,9 @@ SEO.propTypes = {
     description: PropTypes.string,
     keywords: PropTypes.string,
     ogImage: PropTypes.string,
+    ogImageWidth: PropTypes.number,
+    ogImageHeight: PropTypes.number,
+    ogImageAlt: PropTypes.string,
     ogType: PropTypes.string,
     twitterCard: PropTypes.string,
     canonical: PropTypes.string,

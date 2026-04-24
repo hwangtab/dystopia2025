@@ -1,51 +1,52 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedMotion } from 'framer-motion';
 
 const ParallaxBackground = ({ children, className }) => {
   const ref = useRef(null);
+  const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"]
   });
-  
-  // Parallax effects for layers
-  const gridY1 = useTransform(scrollYProgress, [0, 1], [0, 150]); 
-  const gridX1 = useTransform(scrollYProgress, [0, 1], [0, -75]);
-  const gridY2 = useTransform(scrollYProgress, [0, 1], [0, 250]); // Faster scroll for second grid
-  const gridX2 = useTransform(scrollYProgress, [0, 1], [0, 100]); // Different direction
-  const noiseY = useTransform(scrollYProgress, [0, 1], [0, -200]); 
-  // Add transforms for hue-rotate and saturate based on scroll
-  const hueRotate = useTransform(scrollYProgress, [0, 1], [0, 90]); // Rotate hue up to 90 degrees
-  const saturate = useTransform(scrollYProgress, [0, 1], [1, 2.5]); // Increase saturation up to 2.5
 
-  // Mouse parallax effect setup
+  // Parallax effects for layers
+  const gridY1 = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const gridX2 = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const hueRotate = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const saturate = useTransform(scrollYProgress, [0, 1], [1, 2.5]);
+  const filterMV = useTransform(
+    [hueRotate, saturate],
+    ([h, s]) => `hue-rotate(${h}deg) saturate(${s})`
+  );
+
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const springConfig = { damping: 15, stiffness: 100 };
-  const springX = useSpring(mouseX, springConfig);
-  const springY = useSpring(mouseY, springConfig);
+  const springX = useSpring(mouseX, { damping: 15, stiffness: 100 });
+  const springY = useSpring(mouseY, { damping: 15, stiffness: 100 });
+  const springX_grid1 = useTransform(springX, (v) => v * 0.5);
+  const springY_grid2 = useTransform(springY, (v) => v * 1.2);
 
   useEffect(() => {
+    // Skip mouse parallax on touch devices (no mouse) and when the user
+    // has requested reduced motion. Both are common on mobile, where the
+    // useTransform spring is the costliest part of this component.
+    if (reduceMotion) return;
+    if (typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches) {
+      return;
+    }
+
     const handleMouseMove = (e) => {
       const rect = ref.current.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
-      // Normalize mouse position relative to element center, scale for effect intensity
-      mouseX.set(x / (rect.width / 2) * 15); // Adjust multiplier for intensity
-      mouseY.set(y / (rect.height / 2) * 15); // Adjust multiplier for intensity
+      mouseX.set((x / (rect.width / 2)) * 15);
+      mouseY.set((y / (rect.height / 2)) * 15);
     };
 
-    const currentRef = ref.current; // Capture ref value
-    if (currentRef) {
-      currentRef.addEventListener('mousemove', handleMouseMove);
-    }
-
-    return () => {
-      if (currentRef) {
-        currentRef.removeEventListener('mousemove', handleMouseMove);
-      }
-    };
-  }, [mouseX, mouseY]); // Add mouseX, mouseY to dependency array
+    const currentRef = ref.current;
+    currentRef?.addEventListener('mousemove', handleMouseMove);
+    return () => currentRef?.removeEventListener('mousemove', handleMouseMove);
+  }, [mouseX, mouseY, reduceMotion]);
 
   return (
     <motion.div 
@@ -56,36 +57,33 @@ const ParallaxBackground = ({ children, className }) => {
     >
       {/* Layer 1: Subtle Grid */}
       <motion.div
-        className="absolute inset-0 z-[-2] opacity-10" // Behind other layers, low opacity
+        className="absolute inset-0 z-[-2] opacity-10"
         style={{
           backgroundImage: 'linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px)',
           backgroundSize: '30px 30px',
-          x: useTransform(springX, (v) => v * 0.5), // Slower mouse parallax
-          y: gridY1, // Use existing scroll transform
+          x: reduceMotion ? 0 : springX_grid1,
+          y: reduceMotion ? 0 : gridY1,
         }}
       />
 
-      {/* Layer 2: Faster Abstract Pattern (Example using gradient) */}
+      {/* Layer 2: Faster Abstract Pattern */}
       <motion.div
-        className="absolute inset-0 z-[-1] opacity-15" // Above grid, slightly more opaque
+        className="absolute inset-0 z-[-1] opacity-15"
         style={{
           backgroundImage: 'radial-gradient(circle, rgba(180, 60, 255, 0.1) 1px, transparent 1px)',
           backgroundSize: '50px 50px',
-          x: gridX2, // Use existing scroll transform (different direction)
-          y: useTransform(springY, (v) => v * 1.2), // Faster mouse parallax
+          x: reduceMotion ? 0 : gridX2,
+          y: reduceMotion ? 0 : springY_grid2,
         }}
       />
 
-      {/* Filter Layer (Hue/Saturation) - Applied to a container or specific layers if needed */}
-      <motion.div
-        className="absolute inset-0 z-[0]" // Ensure it's behind content but potentially above base bg
-        style={{
-          filter: useTransform(
-            [hueRotate, saturate], 
-            ([h, s]) => `hue-rotate(${h}deg) saturate(${s})`
-          ) 
-        }} 
-      />
+      {/* Filter Layer (Hue/Saturation) — disabled under reduced-motion */}
+      {!reduceMotion && (
+        <motion.div
+          className="absolute inset-0 z-[0]"
+          style={{ filter: filterMV }}
+        />
+      )}
       
       {/* Scan line effect - Keep it subtle */}
       <div className="absolute inset-0 z-[2] pointer-events-none" style={{
