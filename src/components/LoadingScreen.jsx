@@ -3,17 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import GlitchText from './GlitchText'; // Import GlitchText component
 
 // Helper function to generate random scramble text for multiple lines
-const generateScrambleText = (width, height, charWidth = 8, charHeight = 14) => {
+// charWidth/charHeight are intentionally under-estimated so the generated text
+// always overflows the viewport; the parent's overflow-hidden clips the excess.
+const generateScrambleText = (width, height, charWidth = 5, charHeight = 11) => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,./<>?`~';
-  // Ensure enough columns are generated regardless of calculation accuracy
-  const cols = Math.max(200, Math.floor(width / charWidth) + 30); // Generate at least 200 columns or more if needed
-  const rows = Math.floor(height / charHeight);
+  const cols = Math.max(240, Math.ceil(width / charWidth) + 60);
+  const rows = Math.max(60, Math.ceil(height / charHeight) + 10);
   let result = '';
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    result += '\n'; // Add newline for next row
+    result += '\n';
   }
   return result;
 };
@@ -131,8 +132,8 @@ const LoadingScreen = ({ onLoadingComplete }) => {
         animate={{ opacity: isScrambling ? 0.15 : 0 }} 
         transition={{ duration: isScrambling ? 0.1 : 0.5 }} 
       >
-        {/* Let pre tag expand horizontally, parent div handles overflow */}
-        <pre className="min-w-full h-full whitespace-pre">{scrambleText}</pre> 
+        {/* Pre fills the viewport; parent overflow-hidden clips excess columns/rows */}
+        <pre className="w-screen h-screen whitespace-pre m-0 p-0">{scrambleText}</pre>
       </motion.div>
 
       {/* Main Loading Content */}
