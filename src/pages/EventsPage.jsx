@@ -6,13 +6,9 @@ import { FaCalendarAlt, FaMapMarkerAlt, FaTicketAlt, FaChevronDown, FaChevronUp 
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
-import StructuredData from '../components/StructuredData';
 
 // Data
 import eventsData from '../data/events.json';
-
-// Structured Data
-import { getEventSchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 const EventsPage = () => {
   const [expandedEvent, setExpandedEvent] = useState(null);
@@ -108,14 +104,8 @@ const EventsPage = () => {
         canonical="/events"
       />
 
-      {/* Structured Data - Multiple Events */}
-      {eventsData.events.slice(0, 3).map((event) => (
-        <StructuredData key={event.id} data={getEventSchema(event)} />
-      ))}
-      <StructuredData data={getBreadcrumbSchema([
-        { name: '홈', path: '/' },
-        { name: '공연 일정', path: '/events' }
-      ])} />
+      {/* JSON-LD is injected statically at build time via
+          scripts/prerender-meta.mjs. */}
 
       {/* Main Content */}
       <motion.div

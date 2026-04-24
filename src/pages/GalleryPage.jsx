@@ -6,22 +6,13 @@ import { FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
-import StructuredData from '../components/StructuredData';
 import OptimizedImage from '../components/OptimizedImage';
-
-// Structured Data
-import { getImageGallerySchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 // Static manifest of gallery images. We reference public/images/* directly so
 // the build-time optimizer's WebP/AVIF siblings line up with OptimizedImage's
 // extension swap. Numeric sort keeps 1.jpg ahead of 11.jpg.
 const galleryImageNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11];
 const images = galleryImageNumbers.map((n) => `/images/${n}.jpg`);
-const galleryImagesForSchema = images.map((url, i) => ({
-  url,
-  title: `Dystopia 2025 Gallery ${i + 1}`,
-  caption: `삼각전파사 Dystopia 2025 갤러리 이미지 ${i + 1}`,
-}));
 
 const GalleryPage = () => {
   // Removed galleryImages state and useEffect
@@ -119,12 +110,8 @@ const GalleryPage = () => {
         canonical="/gallery"
       />
 
-      {/* Structured Data */}
-      <StructuredData data={getImageGallerySchema(galleryImagesForSchema)} />
-      <StructuredData data={getBreadcrumbSchema([
-        { name: '홈', path: '/' },
-        { name: '갤러리', path: '/gallery' }
-      ])} />
+      {/* JSON-LD is injected statically at build time via
+          scripts/prerender-meta.mjs. */}
 
       {/* Main Content */}
       <motion.div

@@ -7,10 +7,6 @@ import { FaInstagram, FaEnvelope, FaCheckCircle, FaExclamationCircle } from 'rea
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
-import StructuredData from '../components/StructuredData';
-
-// Structured Data
-import { getContactPageSchema, getBreadcrumbSchema, getFAQPageSchema } from '../utils/structuredData';
 
 const faqItems = [
   {
@@ -199,13 +195,8 @@ const ContactPage = () => {
         canonical="/contact"
       />
 
-      {/* Structured Data */}
-      <StructuredData data={getContactPageSchema()} />
-      <StructuredData data={getFAQPageSchema(faqItems)} />
-      <StructuredData data={getBreadcrumbSchema([
-        { name: '홈', path: '/' },
-        { name: '문의하기', path: '/contact' }
-      ])} />
+      {/* JSON-LD is injected statically at build time via
+          scripts/prerender-meta.mjs (route-meta mirrors faqItems). */}
 
       {/* Main Content */}
       <motion.div

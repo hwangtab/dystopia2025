@@ -140,7 +140,9 @@ function rewrite(templateHtml, meta) {
         return `<script type="application/ld+json">${body}</script>`;
       })
       .join('\n    ');
-    html = html.replace('</head>', `    ${scripts}\n  </head>`);
+    // Regex literal (not a global flag) replaces only the first </head>,
+    // making the single-match behaviour explicit rather than implicit.
+    html = html.replace(/<\/head>/, `    ${scripts}\n  </head>`);
   }
 
   return html;
@@ -194,10 +196,23 @@ async function main() {
       type: 'image/jpeg',
       twitterCard: 'summary',
     },
-  }).replace(
-    /<meta name="robots"[^>]*>/,
-    '<meta name="robots" content="noindex, follow" />'
-  );
+  })
+    // Both robots and googlebot must say noindex — leaving googlebot as
+    // "index, follow" creates a conflicting directive that Search Console
+    // flags.
+    .replace(
+      /<meta name="robots"[^>]*>/,
+      '<meta name="robots" content="noindex, follow" />'
+    )
+    .replace(
+      /<meta name="googlebot"[^>]*>/,
+      '<meta name="googlebot" content="noindex, follow" />'
+    )
+    // GitHub Pages serves 404.html for any unknown path. A self-canonical
+    // pointing at "/404" would invite Google to index that phantom URL.
+    // Drop the canonical entirely for this file so nothing consolidates
+    // toward it.
+    .replace(/\s*<link[^>]*rel="canonical"[^>]*>/, '');
   await fs.writeFile(path.join(DIST, '404.html'), notFound, 'utf-8');
 
   // Trim millisecond precision from sitemap <lastmod>. The plugin accepts

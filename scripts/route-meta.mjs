@@ -136,7 +136,13 @@ const staticRoutes = [
     },
     sourceFiles: ['src/pages/EventsPage.jsx', 'src/data/events.json'],
     jsonLd: [
-      ...eventsData.events.slice(0, 3).map(getEventSchema),
+      // Only upcoming events become JSON-LD. Past startDate triggers
+      // Google Search Console's "Event: startDate in the past" warning
+      // and drops the page from Event rich results entirely.
+      ...eventsData.events
+        .filter((e) => new Date(e.date) >= new Date())
+        .slice(0, 3)
+        .map(getEventSchema),
       crumb([{ name: '홈', path: '/' }, { name: '공연 일정', path: '/events' }]),
     ],
   },

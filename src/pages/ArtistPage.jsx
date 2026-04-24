@@ -6,11 +6,7 @@ import { FaMusic, FaBook } from 'react-icons/fa';
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
-import StructuredData from '../components/StructuredData';
 import OptimizedImage from '../components/OptimizedImage';
-
-// Structured Data
-import { getOrganizationSchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 const ArtistPage = () => {
   // Animation variants
@@ -59,12 +55,8 @@ const ArtistPage = () => {
         canonical="/artist"
       />
 
-      {/* Structured Data */}
-      <StructuredData data={getOrganizationSchema()} />
-      <StructuredData data={getBreadcrumbSchema([
-        { name: '홈', path: '/' },
-        { name: '아티스트', path: '/artist' }
-      ])} />
+      {/* JSON-LD is injected statically at build time via
+          scripts/prerender-meta.mjs. */}
 
       {/* Main Content */}
       <motion.div

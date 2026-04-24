@@ -6,14 +6,10 @@ import { FaPlay } from 'react-icons/fa';
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
-import StructuredData from '../components/StructuredData';
 import OptimizedImage from '../components/OptimizedImage';
 
 // Data
 import mediaData from '../data/media.json';
-
-// Structured Data
-import { getCollectionPageSchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 const MediaPage = () => {
   // Removed activeTab state
@@ -95,12 +91,8 @@ const MediaPage = () => {
         canonical="/media"
       />
 
-      {/* Structured Data */}
-      <StructuredData data={getCollectionPageSchema()} />
-      <StructuredData data={getBreadcrumbSchema([
-        { name: '홈', path: '/' },
-        { name: '미디어', path: '/media' }
-      ])} />
+      {/* JSON-LD is injected statically at build time via
+          scripts/prerender-meta.mjs. */}
 
       {/* Main Content */}
       <motion.div

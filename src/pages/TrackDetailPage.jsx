@@ -8,13 +8,9 @@ import AudioPlayer from '../components/AudioPlayer';
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
-import StructuredData from '../components/StructuredData';
 
 // Data
 import albumData from '../data/albums.json';
-
-// Structured Data
-import { getMusicRecordingSchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 const TrackDetailPage = () => {
   const { trackId } = useParams();
@@ -82,13 +78,8 @@ const TrackDetailPage = () => {
             canonical={`/album/track/${track.id}`}
           />
 
-          {/* Structured Data */}
-          <StructuredData data={getMusicRecordingSchema(track, albumData)} />
-          <StructuredData data={getBreadcrumbSchema([
-            { name: '홈', path: '/' },
-            { name: '앨범', path: '/album' },
-            { name: track.title, path: `/album/track/${track.id}` }
-          ])} />
+          {/* JSON-LD is injected statically at build time via
+              scripts/prerender-meta.mjs. */}
         </>
       )}
 

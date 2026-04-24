@@ -8,14 +8,10 @@ import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import AudioPlayer from '../components/AudioPlayer';
 import SEO from '../components/SEO';
-import StructuredData from '../components/StructuredData';
 import OptimizedImage from '../components/OptimizedImage';
 
 // Data
 import albumData from '../data/albums.json';
-
-// Structured Data
-import { getMusicAlbumSchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 const AlbumPage = () => {
   const [selectedTrack, setSelectedTrack] = useState(null);
@@ -78,12 +74,8 @@ const AlbumPage = () => {
         canonical="/album"
       />
 
-      {/* Structured Data */}
-      <StructuredData data={getMusicAlbumSchema(albumData)} />
-      <StructuredData data={getBreadcrumbSchema([
-        { name: '홈', path: '/' },
-        { name: '앨범', path: '/album' }
-      ])} />
+      {/* JSON-LD is injected statically at build time via
+          scripts/prerender-meta.mjs. */}
 
       {/* Main Content */}
       <motion.div

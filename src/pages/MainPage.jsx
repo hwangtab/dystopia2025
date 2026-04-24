@@ -8,16 +8,12 @@ import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import TypingEffect from '../components/TypingEffect';
 import SEO from '../components/SEO';
-import StructuredData from '../components/StructuredData';
 import OptimizedImage from '../components/OptimizedImage';
 
 // Data
 import albumData from '../data/albums.json';
 import eventsData from '../data/events.json';
 import newsData from '../data/news.json';
-
-// Structured Data
-import { getWebsiteSchema, getOrganizationSchema, getBreadcrumbSchema } from '../utils/structuredData';
 
 const MainPage = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -73,12 +69,11 @@ const MainPage = () => {
         canonical="/"
       />
 
-      {/* Structured Data */}
-      <StructuredData data={getWebsiteSchema()} />
-      <StructuredData data={getOrganizationSchema()} />
-      <StructuredData data={getBreadcrumbSchema([
-        { name: '홈', path: '/' }
-      ])} />
+      {/* JSON-LD structured data is injected statically by
+          scripts/prerender-meta.mjs at build time. Runtime <StructuredData>
+          calls were removed from every page to avoid duplicate tags —
+          react-helmet-async doesn't dedupe JSON-LD that lacks its own
+          data-rh attribute. */}
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
