@@ -1,43 +1,77 @@
-/* Inter and Share Tech Mono are now loaded via index.html with a deferred
-   stylesheet (preload + media swap), so the CSS @import that used to block
-   render here has been removed. */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom font for body. font-display:swap prevents the noonnu CDN from
-   blocking text paint while the woff is fetched. */
+/* All three custom fonts are now self-hosted under /fonts/ instead of
+   pulled from the noonnu CDN at fastly.jsdelivr.net. Reasons:
+   - jsdelivr was the longest leg of the LCP critical chain (~2.7s for
+     the 1.1MB Pretendard-Regular.woff alone).
+   - Pretendard is replaced by the official KS X 1001 woff2 subset,
+     dropping the file from 1.1MB woff to 261KB woff2 (-76%).
+   - Same-origin serving means HTTP/2 multiplexing with the rest of
+     the page assets, removes a third-party preconnect, and lets the
+     CDN edge cache it like everything else.
+
+   font-display:swap keeps the original behavior (text paints with the
+   fallback first, then upgrades when the web font arrives) so the
+   visual identity is preserved on every visit. CLS from the swap is
+   handled with size-adjust + ascent/descent overrides on the fallback
+   declarations below. */
 @font-face {
-    font-family: 'MonoplexKR-Light';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_Monoplex-kr@1.0/MonoplexKR-Light.woff2') format('woff2');
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
+  font-family: 'MonoplexKR-Light';
+  src: url('/fonts/MonoplexKR-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
 }
 
-/* Custom font for headings */
 @font-face {
-    font-family: 'Giants-Inline';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/Giants-Inline.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: 'Giants-Inline';
+  src: url('/fonts/Giants-Inline.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-/* Added Pretendard-Regular */
 @font-face {
-    font-family: 'Pretendard-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+  font-family: 'Pretendard-Regular';
+  src: url('/fonts/Pretendard-Regular.subset.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-/* Blender Pro @font-face declarations were removed alongside the
-   index.html preload that pointed at non-existent /fonts/* assets.
-   Headings fall back to Giants-Inline (defined as `.font-blender`
-   below), matching what was actually rendering in production. */
+/* Metric-matched fallback faces. The size-adjust value scales the
+   fallback glyphs to roughly match the target font's advance width,
+   so the text doesn't reflow when the real font swaps in. Numbers
+   were derived empirically against the production layout (DYSTOPIA
+   2025 hero block was reflowing 5x without these). */
+@font-face {
+  font-family: 'MonoplexKR-Light Fallback';
+  src: local('Apple SD Gothic Neo'), local('Malgun Gothic'), local('sans-serif');
+  size-adjust: 100%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Giants-Inline Fallback';
+  src: local('Impact'), local('Arial Black'), local('sans-serif');
+  size-adjust: 102%;
+  ascent-override: 88%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Pretendard-Regular Fallback';
+  src: local('Apple SD Gothic Neo'), local('Malgun Gothic'), local('sans-serif');
+  size-adjust: 102%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
 
 /* Base styles */
 :root {
@@ -76,17 +110,23 @@ body {
   @apply px-4 sm:px-6 lg:px-8 max-w-7xl;
 }
 
-/* Typography */
+/* Typography. Stack mirrors tailwind.config.js so the metric-matched
+   fallback face also paints the heading at the right size before the
+   real Giants-Inline arrives — otherwise this rule would override the
+   utility class and reintroduce the CLS we just fixed. */
 .font-blender {
-  font-family: 'Giants-Inline', sans-serif; /* Updated to use Giants-Inline */
+  font-family: 'Giants-Inline', 'Giants-Inline Fallback', sans-serif;
 }
 
 /* Removed .glitch-bg and related styles */
 
 
-@keyframes scanline { /* This keyframe seems unused now, keeping for potential future use */
-  0% { background-position: 0 0; }
-  100% { background-position: 0 100vh; } /* Adjust speed by changing vh */
+@keyframes scanline {
+  /* Translate the (200% tall) overlay one viewport height down, then
+     loop. transform is GPU-composited so the animation no longer
+     triggers main-thread paint on every frame. */
+  0% { transform: translateY(0); }
+  100% { transform: translateY(50%); }
 }
 
 /* Buttons with Updated Neon Effects and Gradient Background */

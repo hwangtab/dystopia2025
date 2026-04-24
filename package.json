@@ -7,12 +7,13 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "node scripts/optimize-images.mjs",
-    "build": "vite build && cp dist/index.html dist/404.html",
+    "build": "vite build && node scripts/prerender-meta.mjs",
+    "prerender": "node scripts/prerender-meta.mjs",
     "optimize-images": "node scripts/optimize-images.mjs",
     "optimize-audio": "node scripts/optimize-audio.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages --dotfiles -d dist -r git@github.com:hwangtab/dystopia2025.git",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {

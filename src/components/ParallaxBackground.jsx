@@ -85,12 +85,29 @@ const ParallaxBackground = ({ children, className }) => {
         />
       )}
       
-      {/* Scan line effect - Keep it subtle */}
-      <div className="absolute inset-0 z-[2] pointer-events-none" style={{
-        background: 'linear-gradient(transparent 49.8%, rgba(0, 255, 255, 0.05) 50%, rgba(0, 255, 255, 0.05) 50.2%, transparent 50.4%)', // Use accent-cyan color
-        backgroundSize: '100% 5px',
-        animation: 'scanline 12s linear infinite' // Slower scanline
-      }} />
+      {/* Scan line effect. Animating background-position kept the layer
+          on the main thread and tripped Lighthouse's "non-composited
+          animation" audit. We now translate a slightly-taller-than-the-
+          viewport scanline overlay with transform, which the GPU can
+          composite without forcing repaint. Disabled under reduced
+          motion since the scanline is purely decorative. */}
+      {!reduceMotion && (
+        <div
+          className="absolute inset-0 z-[2] pointer-events-none overflow-hidden"
+          aria-hidden="true"
+        >
+          <div
+            className="absolute left-0 right-0 will-change-transform"
+            style={{
+              top: '-100%',
+              height: '200%',
+              background: 'linear-gradient(transparent 49.8%, rgba(0, 255, 255, 0.05) 50%, rgba(0, 255, 255, 0.05) 50.2%, transparent 50.4%)',
+              backgroundSize: '100% 5px',
+              animation: 'scanline 12s linear infinite',
+            }}
+          />
+        </div>
+      )}
       
       
       {/* Vignette effect - Keep */}

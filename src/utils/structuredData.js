@@ -14,15 +14,7 @@ export const getWebsiteSchema = () => ({
     name: 'Dystopia 2025 - 삼각전파사',
     url: siteUrl,
     description: '삼각전파사의 정규 1집 Dystopia 2025 공식 웹사이트',
-    inLanguage: 'ko-KR',
-    potentialAction: {
-        '@type': 'SearchAction',
-        target: {
-            '@type': 'EntryPoint',
-            urlTemplate: `${siteUrl}/?s={search_term_string}`
-        },
-        'query-input': 'required name=search_term_string'
-    }
+    inLanguage: 'ko-KR'
 });
 
 /**
@@ -60,17 +52,21 @@ const toIsoDuration = (durationStr) => {
     if (parts.length === 3) [h, m, s] = parts;
     else if (parts.length === 2) [m, s] = parts;
     else return undefined;
-    return `PT${h ? `${h}H` : ''}${m ? `${m}M` : ''}${s ? `${s}S` : ''}` || 'PT0S';
+    // `PT` alone isn't falsy, so `|| 'PT0S'` doesn't fire. Guard explicitly.
+    if (h === 0 && m === 0 && s === 0) return 'PT0S';
+    return `PT${h ? `${h}H` : ''}${m ? `${m}M` : ''}${s ? `${s}S` : ''}`;
 };
 
 const sumIsoDurations = (tracks) => {
     const totalSec = tracks.reduce((sum, t) => {
         if (!t.duration) return sum;
         const parts = t.duration.split(':').map(Number);
+        if (parts.some(Number.isNaN)) return sum;
         if (parts.length === 2) return sum + parts[0] * 60 + parts[1];
         if (parts.length === 3) return sum + parts[0] * 3600 + parts[1] * 60 + parts[2];
         return sum;
     }, 0);
+    if (totalSec <= 0) return 'PT0S';
     const h = Math.floor(totalSec / 3600);
     const m = Math.floor((totalSec % 3600) / 60);
     const s = totalSec % 60;
@@ -97,7 +93,10 @@ export const getMusicAlbumSchema = (albumData) => ({
     inLanguage: 'ko-KR',
     numTracks: albumData.album.tracks.length,
     duration: sumIsoDurations(albumData.album.tracks),
-    copyrightYear: new Date(albumData.album.releaseDate).getFullYear(),
+    ...(() => {
+        const y = new Date(albumData.album.releaseDate).getFullYear();
+        return Number.isFinite(y) ? { copyrightYear: y } : {};
+    })(),
     copyrightHolder: {
         '@type': 'MusicGroup',
         name: albumData.album.artist
@@ -175,9 +174,15 @@ export const getEventSchema = (event) => ({
         '@type': 'Organization',
         name: event.organizer || '삼각전파사'
     },
-    eventStatus: event.status === 'upcoming' ?
-        'https://schema.org/EventScheduled' :
-        'https://schema.org/EventPostponed',
+    eventStatus: (() => {
+        const s = (event.status || '').toLowerCase();
+        if (s === 'cancelled' || s === 'canceled') return 'https://schema.org/EventCancelled';
+        if (s === 'postponed' || s === 'rescheduled') return 'https://schema.org/EventPostponed';
+        if (s === 'moved_online' || s === 'online') return 'https://schema.org/EventMovedOnline';
+        // Default: the event was (or is) scheduled. Past dates stay Scheduled;
+        // Google indexes historical events that way.
+        return 'https://schema.org/EventScheduled';
+    })(),
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     url: `${siteUrl}/events`
 });

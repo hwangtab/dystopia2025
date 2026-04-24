@@ -64,29 +64,22 @@
       fetchpriority="high"
     />
 
-    <!-- Google Fonts: deferred to non-blocking. The print/onload swap is
-         widely supported and avoids ~150-300ms of render-blocking on slow
-         networks. Both stylesheets are still preconnected. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin />
+    <!-- Self-hosted fonts. Inter / Share Tech Mono have been removed
+         entirely because nothing in the source actually references them
+         (font-mono falls back to Consolas/Monaco). The three Korean
+         display fonts now live under /fonts/ instead of jsdelivr, which
+         drops one third-party origin and shaves ~2.7s off the LCP
+         critical chain. Pretendard is the smallest (261KB) and the one
+         used most prominently in body copy, so we preload it; the other
+         two arrive opportunistically with font-display:swap and a
+         metric-matched fallback face. -->
     <link
       rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap"
+      as="font"
+      href="/fonts/Pretendard-Regular.subset.woff2"
+      type="font/woff2"
+      crossorigin
     />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap"
-      />
-    </noscript>
   </head>
   <body>
     <div id="root"></div>

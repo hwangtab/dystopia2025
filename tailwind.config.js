@@ -19,10 +19,14 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['MonoplexKR-Light', 'sans-serif'], // Changed default sans to MonoplexKR-Light
-        blender: ['Giants-Inline', 'sans-serif'], // Keep heading font
-        pretendard: ['Pretendard-Regular', 'sans-serif'], // Added Pretendard font
-        mono: ['Consolas', 'Monaco', 'monospace'], 
+        // Each stack lists the real font first, then a metric-matched
+        // fallback face (defined in src/index.css). The fallback paints
+        // immediately at the right size so layout doesn't shift when the
+        // web font swaps in — this is what kills CLS from font swap.
+        sans: ['MonoplexKR-Light', 'MonoplexKR-Light Fallback', 'sans-serif'],
+        blender: ['Giants-Inline', 'Giants-Inline Fallback', 'sans-serif'],
+        pretendard: ['Pretendard-Regular', 'Pretendard-Regular Fallback', 'sans-serif'],
+        mono: ['Consolas', 'Monaco', 'monospace'],
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

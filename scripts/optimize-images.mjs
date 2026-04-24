@@ -27,7 +27,12 @@ const RESPONSIVE = {
   'public/images/hero.jpg': [768, 1280, 1920],
 };
 
-const QUALITY = { webp: 82, avif: 55 };
+// AVIF at quality 40 still looks visually identical to the source on
+// gradient-heavy artwork like the hero, while shaving roughly half the
+// bytes vs the previous q=55 (PSI flagged hero-768.avif as having ~80KiB
+// of room left). WebP stays at q=82 since it's only used as a Safari
+// fallback and at that quality the file is small enough.
+const QUALITY = { webp: 82, avif: 40 };
 
 async function listImages(dir) {
   if (!existsSync(dir)) return [];
