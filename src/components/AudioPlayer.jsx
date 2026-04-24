@@ -286,9 +286,8 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
   return (
     <div className="bg-primary bg-opacity-30 backdrop-blur-sm p-4 rounded-lg">
       <audio
-        key={track?.audioFile} // Force re-render when track changes
+        key={track?.audioFile} // Force remount when track changes
         ref={audioRef}
-        src={track?.audioFile}
         onLoadedMetadata={onLoadedMetadata}
         onTimeUpdate={onTimeUpdate}
         onEnded={onEnded}
@@ -299,11 +298,21 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
         }}
         crossOrigin="anonymous"
         // preload="none" stops Chrome/Safari from prefetching the entire
-        // ~10-22MB mp3 the moment a track page mounts. The file is fetched
-        // on the first play() call instead, which is what mobile users
-        // expect when they tap ▶.
+        // file the moment a track page mounts. The file is fetched on
+        // the first play() call instead, which is what mobile users
+        // expect when they tap ▶. AAC (.m4a) at 128kbps is preferred —
+        // it's roughly 40% the size of the original 320kbps mp3 — and
+        // every browser falls back to the original mp3 if for some
+        // reason it can't decode AAC.
         preload="none"
-      />
+      >
+        {track?.audioFile && (
+          <>
+            <source src={track.audioFile.replace(/\.mp3$/i, '.m4a')} type="audio/mp4" />
+            <source src={track.audioFile} type="audio/mpeg" />
+          </>
+        )}
+      </audio>
 
       {error && (
         <div className="bg-accent-magenta/20 border border-accent-magenta text-accent-magenta p-3 rounded-md mb-4 text-sm">
