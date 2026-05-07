@@ -83,7 +83,7 @@ const MediaPage = () => {
         title="미디어 | 삼각전파사"
         description="삼각전파사의 뉴스레터, 미디어 자료, 프레스 키트, 인터뷰 및 세미나 정보를 확인하세요."
         keywords="삼각전파사 뉴스레터, 미디어 자료, 프레스 키트, 인터뷰"
-        ogImage="https://www.dystopia2025.kr/images/2.jpg"
+        ogImage="https://dystopia2025.kr/images/2.jpg"
         ogImageWidth={1280}
         ogImageHeight={854}
         ogImageAlt="삼각전파사 미디어 및 프레스 자료"

@@ -102,7 +102,7 @@ const GalleryPage = () => {
         title="갤러리 | 삼각전파사"
         description="삼각전파사의 Dystopia 2025 관련 이미지 갤러리. 앨범 아트워크, 공연 사진, 프로모 이미지 등을 확인하세요."
         keywords="삼각전파사 갤러리, Dystopia 2025 이미지, 앨범 커버, 공연 사진, 프로모 이미지"
-        ogImage="https://www.dystopia2025.kr/images/book.jpg"
+        ogImage="https://dystopia2025.kr/images/book.jpg"
         ogImageWidth={1280}
         ogImageHeight={945}
         ogImageAlt="삼각전파사 Dystopia 2025 아트워크 갤러리"

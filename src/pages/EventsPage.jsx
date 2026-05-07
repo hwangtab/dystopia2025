@@ -96,7 +96,7 @@ const EventsPage = () => {
         title="공연 일정 | 삼각전파사"
         description="삼각전파사의 공연 및 이벤트 일정. Dystopia 2025 앨범 관련 라이브 공연, 페스티벌, 음악 이벤트 정보를 확인하세요."
         keywords="삼각전파사 공연, 라이브, 페스티벌, 이벤트, 전자음악 공연, 콘서트"
-        ogImage="https://www.dystopia2025.kr/images/7.jpg"
+        ogImage="https://dystopia2025.kr/images/7.jpg"
         ogImageWidth={1280}
         ogImageHeight={860}
         ogImageAlt="삼각전파사 라이브 공연 현장"

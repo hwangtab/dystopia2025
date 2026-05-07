@@ -65,7 +65,12 @@ const galleryImagesForSchema = galleryImageNumbers.map((n, i) => ({
 // Breadcrumb helper that mirrors the runtime-injected trail per route.
 const crumb = (items) => getBreadcrumbSchema(items);
 
-const SITE_URL = 'https://www.dystopia2025.kr';
+// Apex matches the CNAME and is the only host with a valid TLS cert
+// (GitHub Pages issues the cert for the CNAME value; `www.` returns the
+// shared *.github.io fallback and fails verification). Sitemap, canonical,
+// and og:url all point here so Google and social crawlers don't get
+// redirected to a host that won't handshake.
+const SITE_URL = 'https://dystopia2025.kr';
 const DEFAULT_OG = {
   url: `${SITE_URL}/images/hero.jpg`,
   width: 1181,

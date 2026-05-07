@@ -47,7 +47,7 @@ const ArtistPage = () => {
         description="삼각전파사(Triangle Waver)는 한국의 실험전자음악 아티스트입니다. 음악적 실험성과 사회적 메시지를 결합하여 현대 사회의 모순을 표현합니다."
         keywords="삼각전파사, Triangle Waver, 실험전자음악 아티스트, 한국 전자음악, 아방가르드, 인디음악"
         ogType="profile"
-        ogImage="https://www.dystopia2025.kr/images/5.jpg"
+        ogImage="https://dystopia2025.kr/images/5.jpg"
         ogImageWidth={1280}
         ogImageHeight={960}
         ogImageAlt="삼각전파사 아티스트 사진"

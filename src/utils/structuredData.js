@@ -3,7 +3,7 @@
  * Generates various types of structured data for SEO and AI crawlers
  */
 
-const siteUrl = 'https://www.dystopia2025.kr';
+const siteUrl = 'https://dystopia2025.kr';
 
 /**
  * Website Schema

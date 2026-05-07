@@ -5,7 +5,7 @@ const SEO = ({
     title = 'Dystopia 2025 - 삼각전파사',
     description = '삼각전파사의 공식 웹사이트. Dystopia 2025 앨범 정보, 아티스트 소개, 공연 소식 등을 확인하세요.',
     keywords = '삼각전파사, Triangle Waver, Dystopia 2025, 실험전자음악, 아방가르드, 한국 전자음악',
-    ogImage = 'https://www.dystopia2025.kr/images/hero.jpg',
+    ogImage = 'https://dystopia2025.kr/images/hero.jpg',
     ogImageWidth = 1181,
     ogImageHeight = 1181,
     ogImageAlt,
@@ -14,7 +14,7 @@ const SEO = ({
     canonical,
     noindex = false,
 }) => {
-    const siteUrl = 'https://www.dystopia2025.kr';
+    const siteUrl = 'https://dystopia2025.kr';
     const currentUrl = canonical ? `${siteUrl}${canonical}` : siteUrl;
 
     return (

@@ -113,7 +113,7 @@ export default defineConfig(({ command }) => {
     plugins: [
       react(),
       Sitemap({
-        hostname: 'https://www.dystopia2025.kr/',
+        hostname: 'https://dystopia2025.kr/',
         dynamicRoutes: [...staticRoutes, ...trackRoutes],
         changefreq: changefreqMap,
         priority: priorityMap,
