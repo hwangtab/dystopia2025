@@ -13,7 +13,7 @@
     "optimize-images": "node scripts/optimize-images.mjs",
     "optimize-audio": "node scripts/optimize-audio.mjs",
     "predeploy": "npm run build",
-    "deploy": "gh-pages --dotfiles -d dist -r git@github.com:hwangtab/dystopia2025.git",
+    "deploy": "gh-pages --dotfiles -d dist",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
