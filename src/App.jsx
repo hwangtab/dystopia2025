@@ -1,6 +1,6 @@
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion, MotionConfig } from 'framer-motion';
 
 // Static Components
 import Header from './components/Header'; // Keep static imports for always visible components
@@ -67,7 +67,15 @@ function AppContent() {
       <main className="flex-grow">
         <ErrorBoundary> {/* Wrap Suspense with ErrorBoundary */}
           <Suspense fallback={<RouteFallback />}>
-            <AnimatePresence mode="wait">
+            {/* AnimatePresence initial={false} skips the enter animation on
+                the very first render so that hydration sees the same end-
+                state styles (opacity:1, filter:none) the snapshot captured.
+                Without this, framer-motion would briefly apply the "initial"
+                variant (opacity:0, chromatic filter) on mount, mismatch the
+                prerendered DOM, and trigger React error #418. Subsequent
+                client-side navigations still animate normally because by
+                then AnimatePresence is past its initial render. */}
+            <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={location.pathname}
               className="flex-grow" // Added flex-grow
@@ -125,18 +133,49 @@ function AppContent() {
 
 
 function App() {
-  const [initialLoading, setInitialLoading] = useState(true);
+  // Skip the intro splash on prerendered routes — the content is already
+  // baked into the HTML by `scripts/snapshot-routes.mjs`, so playing a
+  // loader on top would only obscure visible content with a black overlay.
+  // Detect via the root having children: the snapshot inlines them at
+  // build time, while a fresh container (dev server, non-prerendered
+  // route) still has an empty root.
+  const wasPrerendered = useRef(
+    typeof document !== 'undefined' &&
+      !!document.getElementById('root') &&
+      document.getElementById('root').children.length > 0
+  );
+  const [initialLoading, setInitialLoading] = useState(() => !wasPrerendered.current);
+
+  // Compress the framer-motion enter animations to zero duration on the
+  // first React paint of a prerendered route. createRoot still discards
+  // the prerendered DOM and re-renders, so without this every motion
+  // component would briefly snap from its `initial` variant (opacity:0,
+  // y:30, scale:0.9, etc.) before animating in — a visible flicker between
+  // the painted snapshot and the React-rendered output. `reducedMotion`
+  // makes those transforms skip and opacity transitions go instantly to
+  // the animate state, so the React frame matches the snapshot frame.
+  // After the first commit we flip back so navigations within the SPA
+  // animate as designed.
+  const [staticFirstPaint, setStaticFirstPaint] = useState(wasPrerendered.current);
+  useEffect(() => {
+    if (staticFirstPaint) {
+      const id = requestAnimationFrame(() => setStaticFirstPaint(false));
+      return () => cancelAnimationFrame(id);
+    }
+    return undefined;
+  }, [staticFirstPaint]);
 
   // Hard cap so the intro can never exceed ~1.6s, even if LoadingScreen's
   // internal progress timer is throttled (background tab, slow CPU). The
   // normal flow ends via onLoadingComplete; this is just a safety net.
   useEffect(() => {
+    if (!initialLoading) return undefined;
     const timer = setTimeout(() => setInitialLoading(false), 1600);
     return () => clearTimeout(timer);
-  }, []);
+  }, [initialLoading]);
 
   return (
-    <>
+    <MotionConfig reducedMotion={staticFirstPaint ? 'always' : 'user'}>
       <AnimatePresence>
         {initialLoading && <LoadingScreen onLoadingComplete={() => setInitialLoading(false)} />}
       </AnimatePresence>
@@ -147,7 +186,7 @@ function App() {
           <AppContent />
         </Router>
       )}
-    </>
+    </MotionConfig>
   );
 }
 
