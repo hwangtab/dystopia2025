@@ -92,10 +92,14 @@ const ContactPage = () => {
         });
       }, (error) => {
         console.log('FAILED...', error);
+        // Sanitize error.text to prevent XSS
+        const safeText = error.text ? String(error.text).replace(/[<>&"']/g, (c) => ({
+          '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;'
+        })[c]) : '서버 오류';
         setContactFormStatus({
           submitted: true,
           success: false,
-          message: `메시지 전송에 실패했습니다: ${error.text || '서버 오류'}. 잠시 후 다시 시도해주세요.`,
+          message: `메시지 전송에 실패했습니다: ${safeText}. 잠시 후 다시 시도해주세요.`,
           loading: false
         });
       });
@@ -126,10 +130,14 @@ const ContactPage = () => {
         setNewsletterEmail(''); // Clear input on success
       }, (error) => {
         console.log('Newsletter FAILED...', error);
+        // Sanitize error.text to prevent XSS
+        const safeText = error.text ? String(error.text).replace(/[<>&"']/g, (c) => ({
+          '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;'
+        })[c]) : '서버 오류';
         setNewsletterStatus({
           submitted: true,
           success: false,
-          message: `구독 신청 중 오류가 발생했습니다: ${error.text || '서버 오류'}.`,
+          message: `구독 신청 중 오류가 발생했습니다: ${safeText}.`,
           loading: false
         });
       });

@@ -9,8 +9,6 @@ const CHAR_POOL = new Uint32Array(
   Array.from(chars, (c) => c.charCodeAt(0))
 );
 
-let scrambleCols = 0;
-let scrambleRows = 0;
 let scrambleBuffer = '';
 let scrambleIndices = null; // Flat array of indices into scrambleBuffer
 
@@ -24,8 +22,6 @@ const initScrambleBuffer = (width, height, charWidth = 5, charHeight = 11) => {
   // Each line = cols chars + newline
   const lineLen = cols + 1;
   const totalLen = lineLen * rows;
-  scrambleCols = cols;
-  scrambleRows = rows;
   scrambleBuffer = '\0'.repeat(totalLen);
   scrambleIndices = new Int32Array(cols * rows);
   // Fill indices to point into scrambleBuffer

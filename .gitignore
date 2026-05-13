@@ -27,6 +27,12 @@ public/images/hero-1920.jpg
 *-mobile.png
 *-desktop.png
 
+# Environment variables (DO NOT commit .env to git)
+.env
+.env.local
+.env*.local
+# .env.example should be committed as a template
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

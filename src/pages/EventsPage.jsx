@@ -71,19 +71,6 @@ const EventsPage = () => {
     }
   };
 
-  // Format date (Removed time formatting from here)
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-      // Removed hour, minute, hour12 options
-    };
-
-    return date.toLocaleDateString('ko-KR', options);
-  };
-
   return (
     <ParallaxBackground className="min-h-screen pt-24 pb-16">
       {/* SEO Meta Tags */}

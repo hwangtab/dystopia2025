@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaPlay, FaCalendarAlt, FaHeadphones } from 'react-icons/fa';
@@ -12,17 +12,9 @@ import OptimizedImage from '../components/OptimizedImage';
 
 // Data
 import albumData from '../data/albums.json';
-import eventsData from '../data/events.json';
-import newsData from '../data/news.json';
 
 const MainPage = () => {
   const [scrollY, setScrollY] = useState(0);
-
-  // Get featured events
-  const featuredEvents = eventsData.events.filter(event => event.isFeatured).slice(0, 2);
-
-  // Get featured news
-  const featuredNews = newsData.news.filter(news => news.isFeatured).slice(0, 2);
 
   // Memoize description paragraphs to avoid per-render split
   const descriptionParagraphs = useMemo(

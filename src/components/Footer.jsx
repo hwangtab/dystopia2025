@@ -48,7 +48,7 @@ const FooterComponent = () => {
         // Sanitize error.text to prevent XSS
         const safeText = error.text ? String(error.text).replace(/[<>&"']/g, (c) => ({
           '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;'
-        })) : '서버 오류';
+        })[c]) : '서버 오류';
         setNewsletterStatus({
           submitted: true,
           success: false,
