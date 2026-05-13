@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
@@ -7,16 +6,26 @@ import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
 import OptimizedImage from '../components/OptimizedImage';
+import galleryData from '../data/gallery.json';
 
 // Static manifest of gallery images. We reference public/images/* directly so
 // the build-time optimizer's WebP/AVIF siblings line up with OptimizedImage's
 // extension swap. Numeric sort keeps 1.jpg ahead of 11.jpg.
-const galleryImageNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11];
+const galleryImageNumbers = galleryData;
 const images = galleryImageNumbers.map((n) => `/images/${n}.jpg`);
 
 const GalleryPage = () => {
   // Removed galleryImages state and useEffect
   const [selectedImage, setSelectedImage] = useState(null); // State for lightbox image path
+
+  // Lock body scroll when lightbox is open
+  useEffect(() => {
+    if (selectedImage != null) {
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = ''; };
+    }
+    return undefined;
+  }, [selectedImage]);
   const [currentIndex, setCurrentIndex] = useState(0); // State for lightbox index
 
   // Handle image click to open lightbox
@@ -63,7 +72,7 @@ const GalleryPage = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedImage, currentIndex, images]); // Use images constant in dependency array
+  }, [selectedImage, currentIndex]);
 
   // Animation variants
   const pageVariants = {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { FaCalendarAlt, FaMapMarkerAlt, FaTicketAlt, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
@@ -21,30 +21,25 @@ const EventsPage = () => {
     }
   };
 
-  // Group events by month
-  const groupedEvents = eventsData.events.reduce((acc, event) => {
-    const date = new Date(event.date);
-    const monthYear = `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
+  // Group events by month — memoized to avoid per-render reduce
+  const { groupedEvents, sortedMonths } = useMemo(() => {
+    const grouped = eventsData.events.reduce((acc, event) => {
+      const date = new Date(event.date);
+      const monthYear = `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
+      if (!acc[monthYear]) acc[monthYear] = [];
+      acc[monthYear].push(event);
+      return acc;
+    }, {});
 
-    if (!acc[monthYear]) {
-      acc[monthYear] = [];
-    }
+    const sorted = Object.keys(grouped).sort((a, b) => {
+      const [yearA, monthA] = a.split('년 ');
+      const [yearB, monthB] = b.split('년 ');
+      if (yearA !== yearB) return parseInt(yearA) - parseInt(yearB);
+      return parseInt(monthA) - parseInt(monthB);
+    });
 
-    acc[monthYear].push(event);
-    return acc;
-  }, {});
-
-  // Sort months chronologically
-  const sortedMonths = Object.keys(groupedEvents).sort((a, b) => {
-    const [yearA, monthA] = a.split('년 ');
-    const [yearB, monthB] = b.split('년 ');
-
-    if (yearA !== yearB) {
-      return parseInt(yearA) - parseInt(yearB);
-    }
-
-    return parseInt(monthA) - parseInt(monthB);
-  });
+    return { groupedEvents: grouped, sortedMonths: sorted };
+  }, []);
 
   // Animation variants
   const pageVariants = {

@@ -2,21 +2,62 @@ import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import GlitchText from './GlitchText';
 
-// Helper function to generate random scramble text for multiple lines
-// charWidth/charHeight are intentionally under-estimated so the generated text
-// always overflows the viewport; the parent's overflow-hidden clips the excess.
-const generateScrambleText = (width, height, charWidth = 5, charHeight = 11) => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,./<>?`~';
+// Pre-allocated scramble buffer to avoid per-frame string allocation.
+// We generate a flat string once and mutate it in-place via indices.
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,./<>?`~';
+const CHAR_POOL = new Uint32Array(
+  Array.from(chars, (c) => c.charCodeAt(0))
+);
+
+let scrambleCols = 0;
+let scrambleRows = 0;
+let scrambleBuffer = '';
+let scrambleIndices = null; // Flat array of indices into scrambleBuffer
+
+/**
+ * Rebuild (or grow) the scramble buffer to cover the given viewport size.
+ * Mutates global state — safe because it runs during mount / resize only.
+ */
+const initScrambleBuffer = (width, height, charWidth = 5, charHeight = 11) => {
   const cols = Math.max(240, Math.ceil(width / charWidth) + 60);
   const rows = Math.max(60, Math.ceil(height / charHeight) + 10);
-  let result = '';
-  for (let j = 0; j < rows; j++) {
-    for (let i = 0; i < cols; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
+  // Each line = cols chars + newline
+  const lineLen = cols + 1;
+  const totalLen = lineLen * rows;
+  scrambleCols = cols;
+  scrambleRows = rows;
+  scrambleBuffer = '\0'.repeat(totalLen);
+  scrambleIndices = new Int32Array(cols * rows);
+  // Fill indices to point into scrambleBuffer
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      scrambleIndices[r * cols + c] = r * lineLen + c;
     }
-    result += '\n';
   }
-  return result;
+};
+
+/**
+ * Mutate ~30% of the buffer in-place and return the new string.
+ * No intermediate strings are created per-cell.
+ */
+const mutateScramble = () => {
+  if (!scrambleBuffer) return '';
+  const buf = scrambleBuffer.split('');
+  const len = scrambleIndices.length;
+  const mutCount = Math.floor(len * 0.3);
+  for (let i = 0; i < mutCount; i++) {
+    const idx = scrambleIndices[Math.floor(Math.random() * len)];
+    buf[idx] = chars[Math.floor(Math.random() * chars.length)];
+  }
+  return buf.join('');
+};
+
+/**
+ * Full refresh (called on resize).
+ */
+const fullRefreshScramble = (width, height) => {
+  initScrambleBuffer(width, height);
+  return mutateScramble();
 };
 
 const LoadingScreen = ({ onLoadingComplete }) => {
@@ -34,7 +75,7 @@ const LoadingScreen = ({ onLoadingComplete }) => {
     const showTimer = setTimeout(() => setShowContent(true), 100);
 
     const updateScramble = () => {
-      setScrambleText(generateScrambleText(window.innerWidth, window.innerHeight));
+      setScrambleText(fullRefreshScramble(window.innerWidth, window.innerHeight));
     };
 
     // Skip the per-frame scramble repaint when the user has asked for

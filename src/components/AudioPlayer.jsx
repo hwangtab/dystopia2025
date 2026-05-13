@@ -16,110 +16,75 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
   const animationRef = useRef(null);
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
-  const sourceRef = useRef(null);
-  const isSourceConnected = useRef(false);
-  const autoPlayHandled = useRef(!autoPlay); // Initialize based on initial prop
+  const sourceConnected = useRef(false);
+  const autoPlayHandled = useRef(!autoPlay);
 
-  // Effect for initializing AudioContext and Analyser (runs once)
+  // Initialize AudioContext + Analyser (once)
   useEffect(() => {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!audioContextRef.current) {
-        try {
-            audioContextRef.current = new AudioContext();
-            analyserRef.current = audioContextRef.current.createAnalyser();
-            analyserRef.current.fftSize = 64;
-        } catch (e) {
-            console.error("Error creating AudioContext or Analyser:", e);
-            setError("오디오 분석기를 초기화할 수 없습니다.");
-        }
+      try {
+        audioContextRef.current = new AudioContext();
+        analyserRef.current = audioContextRef.current.createAnalyser();
+        analyserRef.current.fftSize = 64;
+      } catch (e) {
+        console.error("Error creating AudioContext or Analyser:", e);
+        setError("오디오 분석기를 초기화할 수 없습니다.");
+      }
     }
     return () => {
-        if (audioContextRef.current) {
-            audioContextRef.current.close().catch(e => console.error("Error closing AudioContext:", e));
-            audioContextRef.current = null;
-        }
+      audioContextRef.current?.close().catch(() => {});
+      audioContextRef.current = null;
     };
   }, []);
 
-  // Effect for connecting the audio source to the analyser (runs when track changes)
-   useEffect(() => {
-    // Reset state when track changes, except isPlaying which is handled by autoPlay logic
+  // Connect <audio> → analyser → destination.
+  // Because <audio key={track?.audioFile}> remounts on track change,
+  // createMediaElementSource is effectively called once per audio element.
+  useEffect(() => {
     setCurrentTime(0);
     setDuration(0);
     setError(null);
-    autoPlayHandled.current = !autoPlay; // Reset handled flag based on prop for the new track
+    autoPlayHandled.current = !autoPlay;
 
-    if (track && track.audioFile && audioRef.current && audioContextRef.current && analyserRef.current) {
-        if (sourceRef.current && isSourceConnected.current) {
-            try { sourceRef.current.disconnect(); } catch {}
-            sourceRef.current = null;
-            isSourceConnected.current = false;
-        }
-         if (analyserRef.current) {
-             try { analyserRef.current.disconnect(); } catch {}
-         }
+    const audioEl = audioRef.current;
+    if (!audioEl || !track?.audioFile) return;
 
-        if (audioContextRef.current.state === 'closed') {
-             console.warn("AudioContext is closed, cannot create media element source.");
-             setError("오디오 컨텍스트가 닫혔습니다.");
-             return;
-        }
+    // Wait for metadata before connecting (createMediaElementSource
+    // may throw if called before the element is ready).
+    const connect = () => {
+      if (sourceConnected.current) return;
+      if (!audioContextRef.current || audioContextRef.current.state === 'closed') return;
 
-        if (!isSourceConnected.current) {
-            try {
-                if (audioRef.current.readyState >= 1 || !isSourceConnected.current) {
-                    sourceRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
-                    sourceRef.current.connect(analyserRef.current);
-                    analyserRef.current.connect(audioContextRef.current.destination);
-                    isSourceConnected.current = true;
-                } else {
-                     console.warn("Audio element not ready, delaying connection attempt.");
-                     const connectWhenReady = () => {
-                         if (audioRef.current && audioContextRef.current && analyserRef.current && !isSourceConnected.current && audioContextRef.current.state !== 'closed') {
-                            try {
-                                sourceRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
-                                sourceRef.current.connect(analyserRef.current);
-                                analyserRef.current.connect(audioContextRef.current.destination);
-                                isSourceConnected.current = true;
-                            } catch(e) {
-                                console.error("Error connecting audio source (on event):", e);
-                                if (e.name !== 'InvalidStateError') {
-                                    setError("오디오 소스를 연결할 수 없습니다.");
-                                }
-                                isSourceConnected.current = false;
-                            }
-                         }
-                         audioRef.current?.removeEventListener('canplay', connectWhenReady);
-                         audioRef.current?.removeEventListener('loadedmetadata', connectWhenReady);
-                     };
-                     audioRef.current?.addEventListener('canplay', connectWhenReady);
-                     audioRef.current?.addEventListener('loadedmetadata', connectWhenReady);
-                }
-            } catch (e) {
-                console.error("Error connecting audio source:", e);
-                if (e.name !== 'InvalidStateError') {
-                   setError("오디오 소스를 연결할 수 없습니다.");
-                }
-                isSourceConnected.current = false;
-            }
+      try {
+        const src = audioContextRef.current.createMediaElementSource(audioEl);
+        src.connect(analyserRef.current);
+        analyserRef.current.connect(audioContextRef.current.destination);
+        sourceConnected.current = true;
+      } catch (e) {
+        if (e.name !== 'InvalidStateError') {
+          setError("오디오 소스를 연결할 수 없습니다.");
         }
+      }
+    };
+
+    if (audioEl.readyState >= 1) {
+      connect();
+    } else {
+      audioEl.addEventListener('loadedmetadata', connect, { once: true });
+      audioEl.addEventListener('canplay', connect, { once: true });
     }
 
     return () => {
-      if (sourceRef.current) {
-        try { sourceRef.current.disconnect(); } catch {}
-        sourceRef.current = null;
-        isSourceConnected.current = false;
-      }
-       if (analyserRef.current) {
-         try { analyserRef.current.disconnect(); } catch {}
-       }
+      // No cleanup needed — the <audio key> element is destroyed on
+      // track change, which invalidates its source node automatically.
+      sourceConnected.current = false;
     };
-   }, [track]); // Re-run only when track changes
+  }, [track?.audioFile, autoPlay]);
 
   // Update audio frequency data for visualization
   const updateAudioData = () => {
-    if (analyserRef.current && isPlaying && isSourceConnected.current) {
+    if (analyserRef.current && isPlaying && sourceConnected.current) {
       const bufferLength = analyserRef.current.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
       try {
@@ -159,7 +124,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
       try {
         setError(null);
         await audioRef.current.play();
-        if (analyserRef.current && isSourceConnected.current && !animationRef.current) {
+        if (analyserRef.current && sourceConnected.current && !animationRef.current) {
            animationRef.current = requestAnimationFrame(updateAudioData);
         }
       } catch (playError) {

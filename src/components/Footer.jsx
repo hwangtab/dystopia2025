@@ -9,9 +9,9 @@ const FooterComponent = () => {
   const newsletterFormRef = useRef();
 
   // EmailJS Credentials (Should match ContactPage.jsx)
-  const EMAILJS_SERVICE_ID = 'service_lop4659';
-  const EMAILJS_NEWSLETTER_TEMPLATE_ID = 'template_wxwj093'; // Use the provided template ID
-  const EMAILJS_PUBLIC_KEY = 'E5wHxyFgSkrjQhYVG';
+  const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const EMAILJS_NEWSLETTER_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_NEWSLETTER_TEMPLATE_ID;
+  const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterStatus, setNewsletterStatus] = useState({
@@ -45,10 +45,14 @@ const FooterComponent = () => {
         setNewsletterEmail(''); // Clear input on success
       }, (error) => {
         console.log('Footer Newsletter FAILED...', error);
+        // Sanitize error.text to prevent XSS
+        const safeText = error.text ? String(error.text).replace(/[<>&"']/g, (c) => ({
+          '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;'
+        })) : '서버 오류';
         setNewsletterStatus({
           submitted: true,
           success: false,
-          message: `오류: ${error.text || '서버 오류'}.`,
+          message: `오류: ${safeText}.`,
           loading: false
         });
       });

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaPlay, FaCalendarAlt, FaHeadphones } from 'react-icons/fa';
@@ -24,16 +24,33 @@ const MainPage = () => {
   // Get featured news
   const featuredNews = newsData.news.filter(news => news.isFeatured).slice(0, 2);
 
-  // Handle scroll for parallax effects
+  // Memoize description paragraphs to avoid per-render split
+  const descriptionParagraphs = useMemo(
+    () => albumData.album.description.split('\n\n'),
+    []
+  );
+
+  // Handle scroll for parallax effects — passive listener + RAF throttle
+  // to avoid per-frame React re-renders.
+  const scrollYRef = useRef(0);
+  const rafRef = useRef(null);
+
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
+    const onScroll = () => {
+      scrollYRef.current = window.scrollY;
+      if (rafRef.current == null) {
+        rafRef.current = requestAnimationFrame(() => {
+          setScrollY(scrollYRef.current);
+          rafRef.current = null;
+        });
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', onScroll);
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
@@ -172,10 +189,10 @@ const MainPage = () => {
                 <GlitchText text="앨범 소개" intensity="low" interactive={true} />
               </h2>
               <div className="text-gray-300 space-y-4">
-                <p>{albumData.album.description.split('\n\n')[0]}</p>
-                <p>{albumData.album.description.split('\n\n')[1]}</p>
-                <p className="text-accent-blue font-medium text-lg"> {/* Use blue */}
-                  {albumData.album.description.split('\n\n')[2]}
+                <p>{descriptionParagraphs[0]}</p>
+                <p>{descriptionParagraphs[1]}</p>
+                <p className="text-accent-blue font-medium text-lg">
+                  {descriptionParagraphs[2]}
                 </p>
               </div>
               <div className="mt-8">

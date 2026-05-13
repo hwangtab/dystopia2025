@@ -136,13 +136,14 @@ function App() {
   // Skip the intro splash on prerendered routes — the content is already
   // baked into the HTML by `scripts/snapshot-routes.mjs`, so playing a
   // loader on top would only obscure visible content with a black overlay.
-  // Detect via the root having children: the snapshot inlines them at
-  // build time, while a fresh container (dev server, non-prerendered
-  // route) still has an empty root.
+  // Detect via the root's children count (captured in a single
+  // getElementById call to avoid any race between checks).
   const wasPrerendered = useRef(
     typeof document !== 'undefined' &&
-      !!document.getElementById('root') &&
-      document.getElementById('root').children.length > 0
+      (() => {
+        const root = document.getElementById('root');
+        return root != null && root.children.length > 0;
+      })()
   );
   const [initialLoading, setInitialLoading] = useState(() => !wasPrerendered.current);
 

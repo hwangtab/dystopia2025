@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaPlay, FaInfoCircle } from 'react-icons/fa';
@@ -22,6 +22,12 @@ const AlbumPage = () => {
     setSelectedTrack(track);
     setShouldAutoPlay(autoPlay); // Set autoplay based on button click
   };
+
+  // Memoize description paragraphs to avoid per-render split
+  const descriptionParagraphs = useMemo(
+    () => albumData.album.description.split('\n\n'),
+    []
+  );
 
   const handleTrackEnd = () => {
     // Find the next track
@@ -180,7 +186,7 @@ const AlbumPage = () => {
                 <h2 className="text-2xl font-blender mb-6 text-accent-blue">
                   <GlitchText text="앨범 소개" intensity="low" interactive={true} />
                 </h2> {/* Use blue */}
-                {albumData.album.description.split('\n\n').map((paragraph, index) => (
+                {descriptionParagraphs.map((paragraph, index) => (
                   <p key={index} className={`mb-4 ${index === 2 ? 'text-accent-magenta font-medium text-lg' : 'text-gray-300'}`}> {/* Use magenta */}
                     {paragraph}
                   </p>
