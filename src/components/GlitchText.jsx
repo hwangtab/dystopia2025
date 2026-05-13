@@ -23,10 +23,10 @@ const GlitchText = ({
         return { probability: 0.05, interval: 1500, duration: 120, charProbability: 0.3, maxOffset: 2 };
       case 'high':
         // Increased probability and decreased interval for more frequent glitches
-        return { probability: 0.3, interval: 400, duration: 180, charProbability: 0.5, maxOffset: 3 }; 
+        return { probability: 0.3, interval: 400, duration: 180, charProbability: 0.5, maxOffset: 3 };
       case 'extreme':
         // Increased interval to slow down the glitch frequency
-        return { probability: 0.5, interval: 400, duration: 250, charProbability: 0.7, maxOffset: 5 }; 
+        return { probability: 0.5, interval: 400, duration: 250, charProbability: 0.7, maxOffset: 5 };
       default:
         return { probability: 0.05, interval: 1500, duration: 120, charProbability: 0.3, maxOffset: 2 };
     }
@@ -34,35 +34,22 @@ const GlitchText = ({
 
   const { probability, interval, duration, charProbability, maxOffset } = getIntensityParams();
 
-  // Create glitched version of text
-  const glitchify = (originalText) => {
-    const glitchChars = '!@#$%^&*()_+-=[]{}|;:,./<>?`~01█▓▒░';
-    
-    return originalText
-      .split('')
-      .map(char => {
-        if (char === ' ') return ' '; // Keep spaces
-        if (Math.random() < charProbability) {
-          return glitchChars[Math.floor(Math.random() * glitchChars.length)];
-        }
-        return char;
-      })
-      .join('');
-  };
-
   const triggerGlitch = () => {
     if (glitchingRef.current) return; // Prevent overlapping glitches
     glitchingRef.current = true;
 
     setIsGlitching(true);
-    
+
     const frames = Math.floor(Math.random() * 5) + 3; // More frames for more intense glitch
     let frameCount = 0;
-    
+
+    const glitchChars = '!@#$%^&*()_+-=[]{}|;:,./<>?`~01█▓▒░';
+    const glitchify = (t) => t.split('').map(c => c === ' ' ? ' ' : (Math.random() < charProbability ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : c)).join('');
+
     const glitchFrame = () => {
       setGlitchedText(glitchify(text));
       frameCount++;
-      
+
       if (frameCount < frames) {
         timeoutRef.current = setTimeout(glitchFrame, Math.random() * 50 + 20); // Faster frame rate
       } else {
@@ -73,7 +60,7 @@ const GlitchText = ({
         }, duration);
       }
     };
-    
+
     glitchFrame();
   };
 
@@ -87,18 +74,45 @@ const GlitchText = ({
 
     if (interactive) return; // Don't auto-glitch if interactive
 
-    intervalRef.current = setInterval(() => {
+    const intervalId = setInterval(() => {
+      if (glitchingRef.current) return; // Skip if currently glitching
       if (Math.random() < probability) {
-        triggerGlitch();
+        setIsGlitching(true);
+        glitchingRef.current = true;
+
+        const frames = Math.floor(Math.random() * 5) + 3;
+        let frameCount = 0;
+
+        const glitchChars = '!@#$%^&*()_+-=[]{}|;:,./<>?`~01█▓▒░';
+        const glitchify = (t) => t.split('').map(c => c === ' ' ? ' ' : (Math.random() < charProbability ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : c)).join('');
+
+        const glitchFrame = () => {
+          setGlitchedText(glitchify(text));
+          frameCount++;
+
+          if (frameCount < frames) {
+            timeoutRef.current = setTimeout(glitchFrame, Math.random() * 50 + 20);
+          } else {
+            timeoutRef.current = setTimeout(() => {
+              setGlitchedText(text);
+              setIsGlitching(false);
+              glitchingRef.current = false;
+            }, duration);
+          }
+        };
+
+        glitchFrame();
       }
     }, interval);
+
+    intervalRef.current = intervalId;
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       glitchingRef.current = false; // Reset immediate guard on unmount
     };
-  }, [text, probability, interval, duration, charProbability, interactive, glitchStyle]); // Add glitchStyle to dependencies
+  }, [text, probability, interval, duration, charProbability, interactive, glitchStyle]);
 
   // Handle hover for interactive mode
   const handleMouseEnter = () => {
@@ -124,7 +138,7 @@ const GlitchText = ({
       <span className="relative z-10" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.5)' }}>
         {glitchedText}
       </span>
-      
+
       {/* Glitch Layers based on style */}
       {isGlitching && glitchStyle === 'classic' && (
         <>
@@ -152,7 +166,7 @@ const GlitchText = ({
          <motion.span
             aria-hidden="true"
             className="absolute top-0 left-0 w-full h-full text-accent-green opacity-60 mix-blend-difference pointer-events-none"
-            style={{ 
+            style={{
               transform: `translateX(${randomOffset()*2}px)`,
               clipPath: `polygon(0 0, 100% 0, 100% ${Math.random()*100}%, 0 ${Math.random()*100}%)`
             }}

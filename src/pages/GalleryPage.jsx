@@ -60,11 +60,15 @@ const GalleryPage = () => {
       if (!selectedImage) return;
 
       if (e.key === 'Escape') {
-        closeLightbox();
+        setSelectedImage(null);
       } else if (e.key === 'ArrowLeft') {
-        prevImage();
+        const newIndex = (currentIndex - 1 + images.length) % images.length;
+        setSelectedImage(images[newIndex]);
+        setCurrentIndex(newIndex);
       } else if (e.key === 'ArrowRight') {
-        nextImage();
+        const newIndex = (currentIndex + 1) % images.length;
+        setSelectedImage(images[newIndex]);
+        setCurrentIndex(newIndex);
       }
     };
 

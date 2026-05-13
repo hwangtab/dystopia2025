@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 import { motion } from 'framer-motion'; // Ensure motion is imported
 
@@ -85,8 +85,8 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
     };
   }, [track?.audioFile, autoPlay]);
 
-  // Update audio frequency data for visualization
-  const updateAudioData = () => {
+  // Update audio frequency data for visualization — memoized to satisfy exhaustive-deps
+  const updateAudioData = useCallback(() => {
     if (analyserRef.current && isPlaying && sourceConnected.current) {
       const bufferLength = analyserRef.current.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
@@ -104,7 +104,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
        if (animationRef.current) cancelAnimationFrame(animationRef.current);
        animationRef.current = null;
     }
-  };
+  }, [isPlaying]);
 
   // Removed the useEffect hook that handled autoplay based on track prop change
 
@@ -157,7 +157,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
         animationRef.current = null;
       }
     }
-  }, [isPlaying, duration]); // Depend on isPlaying and duration
+  }, [isPlaying, duration, updateAudioData]); // Depend on isPlaying, duration, and updateAudioData
 
   // Cleanup animation frame on component unmount
   useEffect(() => {
