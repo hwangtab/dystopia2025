@@ -4,6 +4,10 @@ import { Link } from 'react-router-dom';
 import { FaInstagram, FaYoutube, FaBandcamp, FaSpotify, FaTwitter } from 'react-icons/fa';
 import { motion } from 'framer-motion'; // Import motion for messages
 
+// XSS escape map for EmailJS error messages
+const ESCAPE_MAP = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' };
+const escapeHtml = (str) => String(str).replace(/[<>&"']/g, (c) => ESCAPE_MAP[c]);
+
 const FooterComponent = () => {
   const currentYear = new Date().getFullYear();
   const newsletterFormRef = useRef();
@@ -45,14 +49,10 @@ const FooterComponent = () => {
         setNewsletterEmail(''); // Clear input on success
       }, (error) => {
         console.log('Footer Newsletter FAILED...', error);
-        // Sanitize error.text to prevent XSS
-        const safeText = error.text ? String(error.text).replace(/[<>&"']/g, (c) => ({
-          '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;'
-        })[c]) : '서버 오류';
         setNewsletterStatus({
           submitted: true,
           success: false,
-          message: `오류: ${safeText}.`,
+          message: `오류: ${escapeHtml(error.text)}.`,
           loading: false
         });
       });

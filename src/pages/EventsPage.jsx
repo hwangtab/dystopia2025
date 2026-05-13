@@ -23,7 +23,8 @@ const EventsPage = () => {
 
   // Group events by month — memoized to avoid per-render reduce
   const { groupedEvents, sortedMonths } = useMemo(() => {
-    const grouped = eventsData.events.reduce((acc, event) => {
+    const events = eventsData.events || [];
+    const grouped = events.reduce((acc, event) => {
       const date = new Date(event.date);
       const monthYear = `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
       if (!acc[monthYear]) acc[monthYear] = [];

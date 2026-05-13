@@ -1,4 +1,8 @@
 import { useState, useRef } from 'react';
+
+// XSS escape map for EmailJS error messages
+const ESCAPE_MAP = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' };
+const escapeHtml = (str) => String(str).replace(/[<>&"']/g, (c) => ESCAPE_MAP[c]);
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { FaInstagram, FaEnvelope, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
@@ -92,14 +96,10 @@ const ContactPage = () => {
         });
       }, (error) => {
         console.log('FAILED...', error);
-        // Sanitize error.text to prevent XSS
-        const safeText = error.text ? String(error.text).replace(/[<>&"']/g, (c) => ({
-          '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;'
-        })[c]) : '서버 오류';
         setContactFormStatus({
           submitted: true,
           success: false,
-          message: `메시지 전송에 실패했습니다: ${safeText}. 잠시 후 다시 시도해주세요.`,
+          message: `메시지 전송에 실패했습니다: ${escapeHtml(error.text)}. 잠시 후 다시 시도해주세요.`,
           loading: false
         });
       });
@@ -130,14 +130,10 @@ const ContactPage = () => {
         setNewsletterEmail(''); // Clear input on success
       }, (error) => {
         console.log('Newsletter FAILED...', error);
-        // Sanitize error.text to prevent XSS
-        const safeText = error.text ? String(error.text).replace(/[<>&"']/g, (c) => ({
-          '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;'
-        })[c]) : '서버 오류';
         setNewsletterStatus({
           submitted: true,
           success: false,
-          message: `구독 신청 중 오류가 발생했습니다: ${safeText}.`,
+          message: `구독 신청 중 오류가 발생했습니다: ${escapeHtml(error.text)}.`,
           loading: false
         });
       });

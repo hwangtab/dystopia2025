@@ -42,6 +42,8 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
   // Because <audio key={track?.audioFile}> remounts on track change,
   // createMediaElementSource is effectively called once per audio element.
   useEffect(() => {
+    // Reset connection state for the new track mount
+    sourceConnected.current = false;
     setCurrentTime(0);
     setDuration(0);
     setError(null);
@@ -53,6 +55,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
     // Wait for metadata before connecting (createMediaElementSource
     // may throw if called before the element is ready).
     const connect = () => {
+      // Guard: skip if already connected or component unmounted
       if (sourceConnected.current) return;
       if (!audioContextRef.current || audioContextRef.current.state === 'closed') return;
 
