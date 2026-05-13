@@ -34,6 +34,7 @@ export default [
       ...reactHooks.configs.recommended.rules,
       'react/jsx-uses-react': 'error',
       'react/jsx-uses-vars': 'error',
+      'react/prop-types': 'off', // Project uses destructuring defaults, not PropTypes
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
       'react-refresh/only-export-components': [
         'warn',

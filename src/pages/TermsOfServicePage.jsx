@@ -42,7 +42,7 @@ const TermsOfServicePage = () => {
               <GlitchText text="제1조 (목적)" intensity="low" interactive={true} />
             </h2>
             <p>
-              본 약관은 이용자가 삼각전파사(이하 '아티스트')의 공식 웹사이트(이하 '사이트')에서 제공하는 정보 및 관련 서비스(이하 '서비스')를 이용함에 있어 아티스트와 이용자 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
+              본 약관은 이용자가 삼각전파사(이하 &apos;아티스트&apos;)의 공식 웹사이트(이하 &apos;사이트&apos;)에서 제공하는 정보 및 관련 서비스(이하 &apos;서비스&apos;)를 이용함에 있어 아티스트와 이용자 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
             </p>
 
             <h2 className="text-xl font-blender text-accent-blue">

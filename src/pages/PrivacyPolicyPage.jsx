@@ -40,7 +40,7 @@ const PrivacyPolicyPage = () => {
           {/* Placeholder Content */}
           <div className="prose prose-invert max-w-none text-gray-300 space-y-4">
             <p>
-              [삼각전파사]('이하 '회사')는 개인정보보호법 등 관련 법령상의 개인정보보호 규정을 준수하며, 관련 법령에 의거한 개인정보처리방침을 정하여 이용자 권익 보호에 최선을 다하고 있습니다.
+              [삼각전파사](&apos;이하 &apos;회사&apos;)는 개인정보보호법 등 관련 법령상의 개인정보보호 규정을 준수하며, 관련 법령에 의거한 개인정보처리방침을 정하여 이용자 권익 보호에 최선을 다하고 있습니다.
             </p>
             <h2 className="text-xl font-blender text-accent-blue">
               <GlitchText text="1. 개인정보의 처리 목적" intensity="low" interactive={true} />

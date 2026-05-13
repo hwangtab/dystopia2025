@@ -142,7 +142,7 @@ const GalleryPage = () => {
           </h1>
           {/* Applied Pretendard font, italic style, and break-keep, removed period */}
           <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep">
-            삼각전파사의 'Dystopia 2025' 앨범 아트워크, 공연 사진, 뮤직비디오 스틸컷을 감상하세요
+            삼각전파사의 &apos;Dystopia 2025&apos; 앨범 아트워크, 공연 사진, 뮤직비디오 스틸컷을 감상하세요
           </p>
         </motion.div>
 

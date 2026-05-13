@@ -254,7 +254,7 @@ const MainPage = () => {
               // Applied Pretendard font, italic style, and break-keep
               className="text-xl text-gray-300 max-w-3xl mx-auto mb-12 font-pretendard italic break-keep"
             >
-              삼각전파사의 'Dystopia 2025'와 함께 현대 한국 사회의 구조적 모순을 전자음으로 해부하는 여정에 동참하세요
+              삼각전파사의 &apos;Dystopia 2025&apos;와 함께 현대 한국 사회의 구조적 모순을 전자음으로 해부하는 여정에 동참하세요
             </motion.p>
 
             <motion.div

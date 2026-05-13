@@ -111,7 +111,7 @@ const EventsPage = () => {
             </h1>
             {/* Applied Pretendard font, italic style, and break-keep, removed period */}
             <p className="text-xl text-gray-300 max-w-3xl mx-auto font-pretendard italic break-keep">
-              삼각전파사의 'Dystopia 2025' 앨범 발매 기념 공연 및 전국 투어 일정을 확인하세요
+              삼각전파사의 &apos;Dystopia 2025&apos; 앨범 발매 기념 공연 및 전국 투어 일정을 확인하세요
             </p>
           </motion.div>
 
