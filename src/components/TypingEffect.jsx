@@ -1,34 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const TypingEffect = ({ text, speed = 50, className = '' }) => {
   const [displayedText, setDisplayedText] = useState('');
-  const [index, setIndex] = useState(0);
+  const indexRef = useRef(0);
+  const textRef = useRef(text);
+
+  // Reset when text prop changes
+  useEffect(() => {
+    if (!text) return;
+    setDisplayedText('');
+    indexRef.current = 0;
+    textRef.current = text;
+  }, [text]);
 
   useEffect(() => {
-    if (!text) return; // text가 없으면 실행 중지
-
-    setDisplayedText(''); // Reset text when the input text changes
-    setIndex(0); // Reset index when the input text changes
+    if (!text || indexRef.current >= text.length) return;
 
     const timer = setTimeout(() => {
-      if (index < text.length) {
-        setDisplayedText((prev) => prev + text.charAt(index));
-        setIndex((prev) => prev + 1);
-      }
+      setDisplayedText((prev) => prev + text.charAt(indexRef.current));
+      indexRef.current += 1;
     }, speed);
 
-    // Cleanup function to clear timeout if component unmounts or text changes
     return () => clearTimeout(timer);
+  }, [text, speed]); // Removed index — now tracked via ref to avoid per-frame effect restart
 
-  }, [index, text, speed]); // Rerun effect when index, text, or speed changes
-
-  // Return only the displayed text without the cursor effect
-  return (
-    <span className={className}>
-      {displayedText}
-      {/* Removed style tag with cursor effect */}
-    </span>
-  );
+  return <span className={className}>{displayedText}</span>;
 };
 
 export default TypingEffect;

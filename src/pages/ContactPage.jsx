@@ -1,19 +1,17 @@
 import { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
+import emailjs from '@emailjs/browser';
+import { FaInstagram, FaEnvelope, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 // XSS escape map for EmailJS error messages
 const ESCAPE_MAP = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' };
 const escapeHtml = (str) => String(str).replace(/[<>&"']/g, (c) => ESCAPE_MAP[c]);
-import { motion } from 'framer-motion';
-import emailjs from '@emailjs/browser';
-import { FaInstagram, FaEnvelope, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 // Components
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
 import faqData from '../data/faq.json';
-
-const faqItems = faqData;
 
 const ContactPage = () => {
   const formRef = useRef(); // Ref for the main contact form
@@ -488,7 +486,7 @@ const ContactPage = () => {
               <GlitchText text="자주 묻는 질문" intensity="low" interactive={true} />
             </h2>
             <div className="max-w-3xl mx-auto space-y-3">
-              {faqItems.map((item, i) => (
+              {faqData.map((item, i) => (
                 <details
                   key={i}
                   className="group bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg border border-transparent hover:border-accent-blue/40 transition-colors overflow-hidden"

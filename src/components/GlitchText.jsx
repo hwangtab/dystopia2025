@@ -1,15 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-const GlitchText = ({ 
-  text, 
-  className, 
-  intensity = 'medium', 
-  interactive = false, 
+const GlitchText = ({
+  text,
+  className,
+  intensity = 'medium',
+  interactive = false,
   glitchStyle = 'classic' // 'classic', 'blocky', 'subtle'
 }) => {
   const [glitchedText, setGlitchedText] = useState(text);
   const [isGlitching, setIsGlitching] = useState(false);
+  const glitchingRef = useRef(false); // Immediate guard — avoids stale state race
   const timeoutRef = useRef(null);
   const intervalRef = useRef(null);
 
@@ -50,7 +51,8 @@ const GlitchText = ({
   };
 
   const triggerGlitch = () => {
-    if (isGlitching) return; // Prevent overlapping glitches
+    if (glitchingRef.current) return; // Prevent overlapping glitches
+    glitchingRef.current = true;
 
     setIsGlitching(true);
     
@@ -67,6 +69,7 @@ const GlitchText = ({
         timeoutRef.current = setTimeout(() => {
           setGlitchedText(text);
           setIsGlitching(false);
+          glitchingRef.current = false; // Reset immediate guard
         }, duration);
       }
     };
@@ -93,6 +96,7 @@ const GlitchText = ({
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      glitchingRef.current = false; // Reset immediate guard on unmount
     };
   }, [text, probability, interval, duration, charProbability, interactive, glitchStyle]); // Add glitchStyle to dependencies
 
