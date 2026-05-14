@@ -121,13 +121,12 @@ const MainPage = () => {
                 <GlitchText text="2025" intensity="extreme" /> {/* Changed intensity */}
               </span>
             </h1>
-            {/* Apply TypingEffect to the paragraph */}
-            <TypingEffect
-              text="거대 서사가 아닌 해체된 파편들의 콜라주로 이 시대의 모순을 표현하는 'Dystopia 2025'는 실험성과 대중성, 예술과 정치 사이의 좁은 길을 성공적으로 탐색하며, 그 과정에서 우리가 마주한 디스토피아의 실체를 가장 솔직하게 드러냅니다" // Removed period
-              speed={30} // Adjust typing speed (milliseconds per character)
-              // Applied Pretendard font, italic style, and break-keep
+            {/* Subtitle — no TypingEffect to avoid flicker on page transition */}
+            <p
               className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto block font-pretendard italic break-keep"
-            />
+            >
+              거대 서사가 아닌 해체된 파편들의 콜라주로 이 시대의 모순을 표현하는 'Dystopia 2025'는 실험성과 대중성, 예술과 정치 사이의 좁은 길을 성공적으로 탐색하며, 그 과정에서 우리가 마주한 디스토피아의 실체를 가장 솔직하게 드러냅니다
+            </p>
           </motion.div>
 
           <motion.div
