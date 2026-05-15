@@ -10,6 +10,9 @@ import AudioPlayer from '../components/AudioPlayer';
 import SEO from '../components/SEO';
 import OptimizedImage from '../components/OptimizedImage';
 
+// Utils
+import { PAGE_VARIANTS, STAGGER_CONTAINER, FADE_IN_UP } from '../utils/animations';
+
 // Data
 import albumData from '../data/albums.json';
 
@@ -39,36 +42,6 @@ const AlbumPage = () => {
     }
   };
 
-  // Animation variants
-  const pageVariants = {
-    initial: { opacity: 0 },
-    animate: {
-      opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" }
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.5, ease: "easeIn" }
-    }
-  };
-
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const fadeInUp = {
-    initial: { opacity: 0, y: 30 },
-    animate: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" }
-    }
-  };
-
   return (
     <ParallaxBackground className="pt-24 pb-16">
       {/* SEO Meta Tags */}
@@ -89,10 +62,10 @@ const AlbumPage = () => {
         initial="initial"
         animate="animate"
         exit="exit"
-        variants={pageVariants}
+        variants={PAGE_VARIANTS}
       >
         {/* Page Header */}
-        <motion.div variants={fadeInUp} className="mb-16 text-center">
+        <motion.div variants={FADE_IN_UP} className="mb-16 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-blender mb-6">
             <GlitchText text="Dystopia 2025" intensity="low" interactive={true} />
           </h1>
@@ -178,11 +151,11 @@ const AlbumPage = () => {
           {/* Album Description and Tracks */}
           <div className="lg:col-span-2">
             <motion.div
-              variants={staggerContainer}
+              variants={STAGGER_CONTAINER}
               initial="initial"
               animate="animate"
             >
-              <motion.div variants={fadeInUp} className="mb-12">
+              <motion.div variants={FADE_IN_UP} className="mb-12">
                 <h2 className="text-2xl font-blender mb-6 text-accent-blue">
                   <GlitchText text="앨범 소개" intensity="low" interactive={true} />
                 </h2> {/* Use blue */}
@@ -193,7 +166,7 @@ const AlbumPage = () => {
                 ))}
               </motion.div>
 
-              <motion.div variants={fadeInUp}>
+              <motion.div variants={FADE_IN_UP}>
                 <h2 className="text-2xl font-blender mb-6 text-accent-blue">
                   <GlitchText text="트랙리스트" intensity="low" interactive={true} />
                 </h2> {/* Use blue */}

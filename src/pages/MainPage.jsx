@@ -6,9 +6,11 @@ import { FaPlay, FaCalendarAlt, FaHeadphones } from 'react-icons/fa';
 // Components
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
-import TypingEffect from '../components/TypingEffect';
 import SEO from '../components/SEO';
 import OptimizedImage from '../components/OptimizedImage';
+
+// Utils
+import { HERO_FADE_IN_UP } from '../utils/animations';
 
 // Data
 import albumData from '../data/albums.json';
@@ -54,26 +56,12 @@ const MainPage = () => {
     }
   };
 
-  // Animation variants
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    animate: (custom) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-        delay: custom * 0.2
-      }
-    })
-  };
-
   return (
     <ParallaxBackground className="min-h-screen">
       {/* SEO Meta Tags */}
       <SEO
         title="Dystopia 2025 - 삼각전파사 | 실험전자음악"
-        description="삼각전파사의 정규 1집 'Dystopia 2025'. 거대 서사가 아닌 해체된 파편들의 콜라주로 이 시대의 모순을 표현하는 실험전자음악 앨범."
+        description="삼각전파사의 정규 1집 &apos;Dystopia 2025&apos;. 거대 서사가 아닌 해체된 파편들의 콜라주로 이 시대의 모순을 표현하는 실험전자음악 앨범."
         keywords="삼각전파사, Triangle Waver, Dystopia 2025, 실험전자음악, 아방가르드, 한국 전자음악, 전자음악, 인디음악"
         canonical="/"
       />
@@ -125,7 +113,7 @@ const MainPage = () => {
             <p
               className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto block font-pretendard italic break-keep"
             >
-              거대 서사가 아닌 해체된 파편들의 콜라주로 이 시대의 모순을 표현하는 'Dystopia 2025'는 실험성과 대중성, 예술과 정치 사이의 좁은 길을 성공적으로 탐색하며, 그 과정에서 우리가 마주한 디스토피아의 실체를 가장 솔직하게 드러냅니다
+              거대 서사가 아닌 해체된 파편들의 콜라주로 이 시대의 모순을 표현하는 &apos;Dystopia 2025&apos;는 실험성과 대중성, 예술과 정치 사이의 좁은 길을 성공적으로 탐색하며, 그 과정에서 우리가 마주한 디스토피아의 실체를 가장 솔직하게 드러냅니다
             </p>
           </motion.div>
 
@@ -175,7 +163,7 @@ const MainPage = () => {
             whileInView="animate"
             viewport={{ once: true, amount: 0.3 }}
           >
-            <motion.div variants={fadeInUp} custom={0}>
+            <motion.div variants={HERO_FADE_IN_UP} custom={0}>
               <h2 className="text-3xl md:text-4xl font-blender mb-6">
                 <GlitchText text="앨범 소개" intensity="low" interactive={true} />
               </h2>
@@ -194,7 +182,7 @@ const MainPage = () => {
             </motion.div>
 
             <motion.div
-              variants={fadeInUp}
+              variants={HERO_FADE_IN_UP}
               custom={1}
               className="relative"
             >
@@ -240,7 +228,7 @@ const MainPage = () => {
             viewport={{ once: true, amount: 0.3 }}
           >
             <motion.h2
-              variants={fadeInUp}
+              variants={HERO_FADE_IN_UP}
               custom={0}
               className="text-3xl md:text-4xl font-blender mb-6"
             >
@@ -248,7 +236,7 @@ const MainPage = () => {
             </motion.h2>
 
             <motion.p
-              variants={fadeInUp}
+              variants={HERO_FADE_IN_UP}
               custom={1}
               // Applied Pretendard font, italic style, and break-keep
               className="text-xl text-gray-300 max-w-3xl mx-auto mb-12 font-pretendard italic break-keep"
@@ -257,7 +245,7 @@ const MainPage = () => {
             </motion.p>
 
             <motion.div
-              variants={fadeInUp}
+              variants={HERO_FADE_IN_UP}
               custom={2}
             >
               <Link to="/contact" className="btn-primary text-lg px-8 py-3">

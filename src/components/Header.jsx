@@ -5,22 +5,12 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 
 // Components
 import GlitchText from './GlitchText';
+import { NAV_LINKS } from '../data/navLinks';
 
 const HeaderComponent = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-
-  // Navigation links
-  const navLinks = [
-    { path: '/', label: 'HOME' },
-    { path: '/album', label: 'ALBUM' },
-    { path: '/artist', label: 'ARTIST' },
-    { path: '/events', label: 'EVENTS' },
-    { path: '/gallery', label: 'GALLERY' },
-    { path: '/media', label: 'MEDIA' },
-    { path: '/contact', label: 'CONTACT' }
-  ];
 
   // Handle scroll event — passive listener + RAF throttle
   const scrolledRef = useRef(false);
@@ -97,7 +87,7 @@ const HeaderComponent = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
-          {navLinks.map((link) => (
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.path}
               to={link.path}
@@ -133,7 +123,7 @@ const HeaderComponent = () => {
             variants={mobileMenuVariants}
           >
             <nav className="container-custom mx-auto px-4 py-6 flex flex-col space-y-4">
-              {navLinks.map((link) => (
+              {NAV_LINKS.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}

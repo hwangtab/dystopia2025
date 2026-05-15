@@ -1,12 +1,15 @@
 import React, { useState, useRef } from 'react'; // Import useState, useRef
 import emailjs from '@emailjs/browser'; // Import emailjs
 import { Link } from 'react-router-dom';
-import { FaInstagram, FaYoutube, FaBandcamp, FaSpotify, FaTwitter } from 'react-icons/fa';
+import { FaInstagram } from 'react-icons/fa';
 import { motion } from 'framer-motion'; // Import motion for messages
 
 // XSS escape map for EmailJS error messages
 const ESCAPE_MAP = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' };
 const escapeHtml = (str) => String(str).replace(/[<>&"']/g, (c) => ESCAPE_MAP[c]);
+
+// Import centralized nav links
+import { NAV_LINKS } from '../data/navLinks';
 
 const FooterComponent = () => {
   const currentYear = new Date().getFullYear();
@@ -94,13 +97,15 @@ const FooterComponent = () => {
           {/* Quick Links - Use blue for hover */}
           <div className="flex flex-col space-y-2">
             <h3 className="text-white text-lg font-blender mb-4">바로가기</h3>
-            <Link to="/" className="text-gray-400 hover:text-accent-blue transition-colors font-blender">HOME</Link>
-            <Link to="/album" className="text-gray-400 hover:text-accent-blue transition-colors font-blender">ALBUM</Link>
-            <Link to="/artist" className="text-gray-400 hover:text-accent-blue transition-colors font-blender">ARTIST</Link>
-            <Link to="/events" className="text-gray-400 hover:text-accent-blue transition-colors font-blender">EVENTS</Link>
-            <Link to="/gallery" className="text-gray-400 hover:text-accent-blue transition-colors font-blender">GALLERY</Link>
-            <Link to="/media" className="text-gray-400 hover:text-accent-blue transition-colors font-blender">MEDIA</Link>
-            <Link to="/contact" className="text-gray-400 hover:text-accent-blue transition-colors font-blender">CONTACT</Link>
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className="text-gray-400 hover:text-accent-blue transition-colors font-blender"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
 
           {/* Newsletter - Use blue for focus ring and button */}

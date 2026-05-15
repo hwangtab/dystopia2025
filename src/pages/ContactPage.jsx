@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
-import { FaInstagram, FaEnvelope, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+import { FaInstagram, FaEnvelope } from 'react-icons/fa';
 
 // XSS escape map for EmailJS error messages
 const ESCAPE_MAP = { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' };
@@ -11,6 +11,11 @@ const escapeHtml = (str) => String(str).replace(/[<>&"']/g, (c) => ESCAPE_MAP[c]
 import GlitchText from '../components/GlitchText';
 import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
+
+// Utils
+import { PAGE_VARIANTS, STAGGER_CONTAINER, FADE_IN_UP } from '../utils/animations';
+
+// Data
 import faqData from '../data/faq.json';
 
 const ContactPage = () => {
@@ -137,36 +142,6 @@ const ContactPage = () => {
       });
   };
 
-  // Animation variants
-  const pageVariants = {
-    initial: { opacity: 0 },
-    animate: {
-      opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" }
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.5, ease: "easeIn" }
-    }
-  };
-
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const fadeInUp = {
-    initial: { opacity: 0, y: 30 },
-    animate: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" }
-    }
-  };
-
   return (
     <ParallaxBackground className="min-h-screen pt-24 pb-16">
       {/* SEO Meta Tags */}
@@ -186,15 +161,15 @@ const ContactPage = () => {
         initial="initial"
         animate="animate"
         exit="exit"
-        variants={pageVariants}
+        variants={PAGE_VARIANTS}
       >
         <motion.div
-          variants={staggerContainer}
+          variants={STAGGER_CONTAINER}
           initial="initial"
           animate="animate"
         >
           {/* Page Header */}
-          <motion.div variants={fadeInUp} className="mb-16 text-center"> {/* Changed mb-12 to mb-16 */}
+          <motion.div variants={FADE_IN_UP} className="mb-16 text-center"> {/* Changed mb-12 to mb-16 */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-blender mb-6">
               <GlitchText text="연락하기" intensity="low" interactive={true} />
             </h1>
@@ -206,7 +181,7 @@ const ContactPage = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Contact Form */}
-            <motion.div variants={fadeInUp} className="lg:col-span-2">
+            <motion.div variants={FADE_IN_UP} className="lg:col-span-2">
               <div className="bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6 md:p-8 overflow-hidden"> {/* Added overflow-hidden */}
                 <h2 className="text-2xl font-blender mb-6 text-accent-blue">
                   <GlitchText text="메시지 보내기" intensity="low" interactive={true} />
@@ -356,7 +331,7 @@ const ContactPage = () => {
             </motion.div>
 
             {/* Contact Info */}
-            <motion.div variants={fadeInUp} className="lg:col-span-1">
+            <motion.div variants={FADE_IN_UP} className="lg:col-span-1">
               {/* Reverted hover effects to blue neon */}
               <div className="bg-primary-dark bg-opacity-50 backdrop-blur-sm rounded-lg p-6 md:p-8 mb-8 border border-transparent hover:border-accent-blue/50 hover:shadow-neon-blue transition-all duration-300 overflow-hidden"> {/* Added overflow-hidden */}
                 <h2 className="text-2xl font-blender mb-6 text-accent-blue">
@@ -416,7 +391,7 @@ const ContactPage = () => {
           </div>
 
           {/* Newsletter Section */}
-          <motion.div variants={fadeInUp} className="mt-16">
+          <motion.div variants={FADE_IN_UP} className="mt-16">
             <div className="bg-primary bg-opacity-30 backdrop-blur-sm rounded-lg p-8 text-center">
               <h2 className="text-2xl font-blender mb-4 text-white">
                 <GlitchText text="뉴스레터 구독" intensity="low" interactive={true} />
@@ -475,7 +450,7 @@ const ContactPage = () => {
 
           {/* FAQ Section */}
           <motion.section
-            variants={fadeInUp}
+            variants={FADE_IN_UP}
             className="mt-16"
             aria-labelledby="faq-heading"
           >
