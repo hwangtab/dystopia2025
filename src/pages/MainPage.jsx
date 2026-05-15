@@ -103,15 +103,15 @@ const MainPage = () => {
           >
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-blender mb-4">
               <span className="block text-accent-magenta"> {/* Use magenta */}
-                <GlitchText text="DYSTOPIA" intensity="extreme" /> {/* Changed intensity */}
+                <GlitchText text="DYSTOPIA" intensity="high" />
               </span>
               <span className="block text-accent-blue"> {/* Use blue */}
-                <GlitchText text="2025" intensity="extreme" /> {/* Changed intensity */}
+                <GlitchText text="2025" intensity="high" />
               </span>
             </h1>
             {/* Subtitle — no TypingEffect to avoid flicker on page transition */}
             <p
-              className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto block font-pretendard italic break-keep"
+              className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto block font-pretendard italic break-keep relative z-20"
             >
               거대 서사가 아닌 해체된 파편들의 콜라주로 이 시대의 모순을 표현하는 &apos;Dystopia 2025&apos;는 실험성과 대중성, 예술과 정치 사이의 좁은 길을 성공적으로 탐색하며, 그 과정에서 우리가 마주한 디스토피아의 실체를 가장 솔직하게 드러냅니다
             </p>
