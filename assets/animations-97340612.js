@@ -1,0 +1,1 @@
+const a={animate:{transition:{staggerChildren:.1}}},i={initial:{opacity:0,y:30},animate:{opacity:1,y:0,transition:{duration:.5,ease:"easeOut"}}},t={initial:{opacity:0,y:60},animate:a=>({opacity:1,y:0,transition:{duration:.8,ease:"easeOut",delay:.2*a}})};export{i as F,t as H,a as S};
