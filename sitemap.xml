@@ -2,10 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     <url>
         <loc>
-            https://www.dystopia2025.kr/
+            https://dystopia2025.kr/
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-15T00:00:00Z
         </lastmod>
         <changefreq>
             weekly
@@ -16,10 +16,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/album
+            https://dystopia2025.kr/album
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-15T00:00:00Z
         </lastmod>
         <changefreq>
             monthly
@@ -30,10 +30,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/artist
+            https://dystopia2025.kr/artist
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-13T00:00:00Z
         </lastmod>
         <changefreq>
             monthly
@@ -44,10 +44,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/events
+            https://dystopia2025.kr/events
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-13T00:00:00Z
         </lastmod>
         <changefreq>
             weekly
@@ -58,10 +58,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/gallery
+            https://dystopia2025.kr/gallery
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-13T00:00:00Z
         </lastmod>
         <changefreq>
             monthly
@@ -72,10 +72,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/media
+            https://dystopia2025.kr/media
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-07T00:00:00Z
         </lastmod>
         <changefreq>
             weekly
@@ -86,10 +86,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/contact
+            https://dystopia2025.kr/contact
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-30T00:00:00Z
         </lastmod>
         <changefreq>
             yearly
@@ -100,10 +100,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/privacy
+            https://dystopia2025.kr/privacy
         </loc>
         <lastmod>
-            2025-12-08T00:00:00.000Z
+            2026-05-13T00:00:00Z
         </lastmod>
         <changefreq>
             yearly
@@ -114,10 +114,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/terms
+            https://dystopia2025.kr/terms
         </loc>
         <lastmod>
-            2025-12-08T00:00:00.000Z
+            2026-05-13T00:00:00Z
         </lastmod>
         <changefreq>
             yearly
@@ -128,10 +128,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/album/track/track1
+            https://dystopia2025.kr/album/track/track1
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-30T00:00:00Z
         </lastmod>
         <changefreq>
             monthly
@@ -142,10 +142,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/album/track/track2
+            https://dystopia2025.kr/album/track/track2
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-30T00:00:00Z
         </lastmod>
         <changefreq>
             monthly
@@ -156,10 +156,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/album/track/track3
+            https://dystopia2025.kr/album/track/track3
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-30T00:00:00Z
         </lastmod>
         <changefreq>
             monthly
@@ -170,10 +170,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/album/track/track4
+            https://dystopia2025.kr/album/track/track4
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-30T00:00:00Z
         </lastmod>
         <changefreq>
             monthly
@@ -184,10 +184,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/album/track/track5
+            https://dystopia2025.kr/album/track/track5
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-30T00:00:00Z
         </lastmod>
         <changefreq>
             monthly
@@ -198,10 +198,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/album/track/track6
+            https://dystopia2025.kr/album/track/track6
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-30T00:00:00Z
         </lastmod>
         <changefreq>
             monthly
@@ -212,10 +212,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/album/track/track7
+            https://dystopia2025.kr/album/track/track7
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-30T00:00:00Z
         </lastmod>
         <changefreq>
             monthly
@@ -226,10 +226,10 @@
     </url>
     <url>
         <loc>
-            https://www.dystopia2025.kr/album/track/track8
+            https://dystopia2025.kr/album/track/track8
         </loc>
         <lastmod>
-            2026-04-24T00:00:00.000Z
+            2026-05-30T00:00:00Z
         </lastmod>
         <changefreq>
             monthly

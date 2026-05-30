@@ -1,4 +1,4 @@
-# https://www.dystopia2025.kr/robots.txt
+# https://dystopia2025.kr/robots.txt
 User-agent: *
 Allow: /
 Disallow: /404.html
@@ -21,4 +21,4 @@ User-agent: PerplexityBot
 Allow: /
 Disallow: /404.html
 
-Sitemap: https://www.dystopia2025.kr/sitemap.xml
+Sitemap: https://dystopia2025.kr/sitemap.xml
