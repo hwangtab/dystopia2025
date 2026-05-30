@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 // Components
 import ParallaxBackground from '../components/ParallaxBackground';
@@ -7,13 +6,6 @@ import GlitchText from '../components/GlitchText';
 import SEO from '../components/SEO';
 
 const PrivacyPolicyPage = () => {
-  // Animation variants
-  const pageVariants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: 0.5 } },
-    exit: { opacity: 0, transition: { duration: 0.5 } }
-  };
-
   return (
     <ParallaxBackground className="min-h-screen pt-24 pb-16">
       {/* SEO Meta Tags */}
@@ -25,13 +17,7 @@ const PrivacyPolicyPage = () => {
       />
 
       {/* Main Content */}
-      <motion.div
-        className="container-custom mx-auto"
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={pageVariants}
-      >
+      <div className="container-custom mx-auto">
         <div className="bg-primary-dark p-8 md:p-12 rounded-lg shadow-lg border border-gray-700/50">
           <h1 className="text-3xl md:text-4xl font-blender mb-8 text-center">
             <GlitchText text="개인정보처리방침" intensity="low" interactive={true} />
@@ -76,7 +62,7 @@ const PrivacyPolicyPage = () => {
             </p>
           </div>
         </div>
-      </motion.div>
+      </div>
     </ParallaxBackground>
   );
 };

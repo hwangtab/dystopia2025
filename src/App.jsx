@@ -33,10 +33,14 @@ const RouteFallback = () => (
 function AppContent() {
   const location = useLocation();
 
+  // Single source of truth for page transitions. Each page used to wrap its
+  // content in its own opacity fade too, which stacked on top of this one and
+  // produced a visible double fade on navigation. Pages now only animate their
+  // inner content blocks; this wrapper owns the whole-page enter/exit fade.
   const pageTransitionVariants = {
     initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: 0.3, ease: 'easeOut' } },
-    exit: { opacity: 0, transition: { duration: 0.2, ease: 'easeIn' } }
+    animate: { opacity: 1, transition: { duration: 0.5, ease: 'easeOut' } },
+    exit: { opacity: 0, transition: { duration: 0.4, ease: 'easeIn' } }
   };
 
   return (

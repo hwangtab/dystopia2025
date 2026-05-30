@@ -4,22 +4,11 @@
  */
 
 /**
- * Page transition variants — fade in/out for route changes.
- */
-export const PAGE_VARIANTS = {
-  initial: { opacity: 0 },
-  animate: {
-    opacity: 1,
-    transition: { duration: 0.5, ease: 'easeOut' },
-  },
-  exit: {
-    opacity: 0,
-    transition: { duration: 0.5, ease: 'easeIn' },
-  },
-};
-
-/**
  * Stagger container — children animate with delay between each.
+ *
+ * Note: whole-page enter/exit fades are owned by the route-level
+ * AnimatePresence in App.jsx. Pages must NOT re-wrap their content in another
+ * opacity fade or the two stack into a visible double fade on navigation.
  */
 export const STAGGER_CONTAINER = {
   animate: {

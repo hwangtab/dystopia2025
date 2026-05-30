@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { FaArrowLeft } from 'react-icons/fa';
 
 // Components
@@ -53,18 +52,6 @@ const TrackDetailPage = () => {
     );
   }
 
-  const pageVariants = {
-    initial: { opacity: 0 },
-    animate: {
-      opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" }
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.5, ease: "easeIn" }
-    }
-  };
-
   return (
     <ParallaxBackground className="min-h-screen pt-24 pb-16">
       {/* SEO Meta Tags */}
@@ -84,13 +71,7 @@ const TrackDetailPage = () => {
       )}
 
       {/* Main Content */}
-      <motion.div
-        className="container-custom mx-auto"
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={pageVariants}
-      >
+      <div className="container-custom mx-auto">
         <Link
           to="/album"
           className="inline-flex items-center text-gray-400 hover:text-accent-blue mb-8 transition-colors" /* Use blue */
@@ -187,7 +168,7 @@ const TrackDetailPage = () => {
             )}
           </div>
         </div>
-      </motion.div>
+      </div>
     </ParallaxBackground>
   );
 };

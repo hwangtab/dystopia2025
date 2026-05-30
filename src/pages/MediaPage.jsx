@@ -16,18 +16,6 @@ const MediaPage = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
 
   // Animation variants (keep as they are)
-  const pageVariants = {
-    initial: { opacity: 0 },
-    animate: {
-      opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" }
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.5, ease: "easeIn" }
-    }
-  };
-
   const staggerContainer = {
     animate: {
       transition: {
@@ -100,7 +88,6 @@ const MediaPage = () => {
         initial="initial"
         animate="animate"
         exit="exit"
-        variants={pageVariants}
       >
         {/* Page Header */}
         <motion.div variants={fadeInUp} className="mb-16 text-center"> {/* Changed mb-12 to mb-16 */}

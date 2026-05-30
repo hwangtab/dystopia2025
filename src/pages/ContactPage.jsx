@@ -13,7 +13,7 @@ import ParallaxBackground from '../components/ParallaxBackground';
 import SEO from '../components/SEO';
 
 // Utils
-import { PAGE_VARIANTS, STAGGER_CONTAINER, FADE_IN_UP } from '../utils/animations';
+import { STAGGER_CONTAINER, FADE_IN_UP } from '../utils/animations';
 
 // Data
 import faqData from '../data/faq.json';
@@ -161,7 +161,6 @@ const ContactPage = () => {
         initial="initial"
         animate="animate"
         exit="exit"
-        variants={PAGE_VARIANTS}
       >
         <motion.div
           variants={STAGGER_CONTAINER}

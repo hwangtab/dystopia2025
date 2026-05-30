@@ -11,7 +11,7 @@ import SEO from '../components/SEO';
 import OptimizedImage from '../components/OptimizedImage';
 
 // Utils
-import { PAGE_VARIANTS, STAGGER_CONTAINER, FADE_IN_UP } from '../utils/animations';
+import { STAGGER_CONTAINER, FADE_IN_UP } from '../utils/animations';
 
 // Data
 import albumData from '../data/albums.json';
@@ -62,7 +62,6 @@ const AlbumPage = () => {
         initial="initial"
         animate="animate"
         exit="exit"
-        variants={PAGE_VARIANTS}
       >
         {/* Page Header */}
         <motion.div variants={FADE_IN_UP} className="mb-16 text-center">
