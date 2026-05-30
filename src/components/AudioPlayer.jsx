@@ -78,6 +78,14 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
       audioEl.addEventListener('canplay', connect, { once: true });
     }
 
+    // preload="none" won't fetch metadata on its own. When autoplay is
+    // requested, kick off loading so `loadedmetadata` fires and the autoplay
+    // handler in onLoadedMetadata can run (manual playback doesn't need this —
+    // the play() call triggers loading on its own).
+    if (autoPlay) {
+      audioEl.load();
+    }
+
     return () => {
       // No cleanup needed — the <audio key> element is destroyed on
       // track change, which invalidates its source node automatically.
@@ -146,10 +154,12 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
     };
 
     if (isPlaying) {
-      // Play only if duration is loaded OR readyState indicates it's safe
-      if (duration > 0 || audioRef.current?.readyState >= 2) {
-          playAudio();
-      }
+      // preload="none" keeps readyState/duration at 0 until play() kicks off
+      // the network fetch, so we can't gate on them — that would deadlock the
+      // very first tap (no play() → no load → no metadata → never plays).
+      // Call play() directly; the browser loads on demand and an interrupted
+      // load surfaces as AbortError, which the catch above intentionally ignores.
+      playAudio();
     } else {
       audioRef.current?.pause();
       if (animationRef.current) {
@@ -157,7 +167,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
         animationRef.current = null;
       }
     }
-  }, [isPlaying, duration, updateAudioData]); // Depend on isPlaying, duration, and updateAudioData
+  }, [isPlaying, updateAudioData]); // Depend on isPlaying and updateAudioData
 
   // Cleanup animation frame on component unmount
   useEffect(() => {
