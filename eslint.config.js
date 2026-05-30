@@ -35,6 +35,10 @@ export default [
       'react/jsx-uses-react': 'error',
       'react/jsx-uses-vars': 'error',
       'react/prop-types': 'off', // Project uses destructuring defaults, not PropTypes
+      // React 18.3 doesn't recognize the camelCase `fetchPriority` prop (React 19
+      // adds it) and warns to use lowercase `fetchpriority`. eslint-plugin-react
+      // only knows the camelCase form, so whitelist the lowercase HTML attribute.
+      'react/no-unknown-property': ['error', { ignore: ['fetchpriority'] }],
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
       'react-refresh/only-export-components': [
         'warn',

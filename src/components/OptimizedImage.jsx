@@ -48,7 +48,10 @@ const OptimizedImage = ({
         alt={alt}
         loading={priority ? 'eager' : 'lazy'}
         decoding={priority ? 'sync' : 'async'}
-        fetchPriority={priority ? 'high' : 'auto'}
+        // lowercase `fetchpriority`: React 18.3 doesn't recognize the camelCase
+        // `fetchPriority` prop (added in React 19), so it drops it and logs a
+        // warning. The lowercase form is passed through to the DOM as-is.
+        fetchpriority={priority ? 'high' : 'auto'}
         className={imgClassName ?? className}
         {...rest}
       />

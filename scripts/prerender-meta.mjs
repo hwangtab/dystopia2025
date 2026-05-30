@@ -36,7 +36,10 @@ const escape = (s) =>
  */
 function replaceAttr(html, anchorRegex, attr, value) {
   return html.replace(anchorRegex, (tag) =>
-    tag.replace(new RegExp(`${attr}="[^"]*"`), `${attr}="${escape(value)}"`)
+    // Function replacement: a literal string replacement would treat `$` in the
+    // escaped value as a special pattern ($&, $1, ...). escape() doesn't encode
+    // `$`, so a value containing it would corrupt the attribute.
+    tag.replace(new RegExp(`${attr}="[^"]*"`), () => `${attr}="${escape(value)}"`)
   );
 }
 
@@ -45,7 +48,7 @@ function rewrite(templateHtml, meta) {
   let html = templateHtml;
 
   // <title>
-  html = html.replace(/<title>[^<]*<\/title>/, `<title>${escape(meta.title)}</title>`);
+  html = html.replace(/<title>[^<]*<\/title>/, () => `<title>${escape(meta.title)}</title>`);
 
   // <meta name="description">
   html = replaceAttr(
@@ -142,7 +145,7 @@ function rewrite(templateHtml, meta) {
       .join('\n    ');
     // Regex literal (not a global flag) replaces only the first </head>,
     // making the single-match behaviour explicit rather than implicit.
-    html = html.replace(/<\/head>/, `    ${scripts}\n  </head>`);
+    html = html.replace(/<\/head>/, () => `    ${scripts}\n  </head>`);
   }
 
   return html;

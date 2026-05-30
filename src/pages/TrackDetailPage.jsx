@@ -125,7 +125,7 @@ const TrackDetailPage = () => {
                 <GlitchText text="Lyrics" intensity="low" interactive={true} />
               </h2> {/* Use blue */}
               <div className="bg-gray-900 bg-opacity-50 p-6 rounded-lg border border-gray-800">
-                {track.lyrics.split('\n').map((line, index) => (
+                {(track.lyrics || '').split('\n').map((line, index) => (
                   <p key={index} className={`mb-2 ${index % 4 === 0 ? 'text-accent-magenta' : 'text-gray-300'}`}> {/* Use magenta */}
                     {line || <br />}
                   </p>

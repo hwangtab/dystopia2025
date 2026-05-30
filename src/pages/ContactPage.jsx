@@ -102,7 +102,7 @@ const ContactPage = () => {
         setContactFormStatus({
           submitted: true,
           success: false,
-          message: `메시지 전송에 실패했습니다: ${escapeHtml(error.text)}. 잠시 후 다시 시도해주세요.`,
+          message: `메시지 전송에 실패했습니다: ${escapeHtml(error?.text || error?.message || '알 수 없는 오류')}. 잠시 후 다시 시도해주세요.`,
           loading: false
         });
       });
@@ -136,7 +136,7 @@ const ContactPage = () => {
         setNewsletterStatus({
           submitted: true,
           success: false,
-          message: `구독 신청 중 오류가 발생했습니다: ${escapeHtml(error.text)}.`,
+          message: `구독 신청 중 오류가 발생했습니다: ${escapeHtml(error?.text || error?.message || '알 수 없는 오류')}.`,
           loading: false
         });
       });

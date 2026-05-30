@@ -55,7 +55,7 @@ const FooterComponent = () => {
         setNewsletterStatus({
           submitted: true,
           success: false,
-          message: `오류: ${escapeHtml(error.text)}.`,
+          message: `오류: ${escapeHtml(error?.text || error?.message || '알 수 없는 오류')}.`,
           loading: false
         });
       });
