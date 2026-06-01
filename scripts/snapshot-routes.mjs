@@ -33,6 +33,71 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 
+const executableCandidatesByPlatform = {
+  darwin: [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/Applications/Chromium.app/Contents/MacOS/Chromium',
+    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+    '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
+  ],
+  linux: [
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+  ],
+  win32: [
+    path.join(process.env.PROGRAMFILES || 'C:\\Program Files', 'Google\\Chrome\\Application\\chrome.exe'),
+    path.join(
+      process.env['PROGRAMFILES(X86)'] || 'C:\\Program Files (x86)',
+      'Google\\Chrome\\Application\\chrome.exe'
+    ),
+    path.join(process.env.LOCALAPPDATA || '', 'Google\\Chrome\\Application\\chrome.exe'),
+  ],
+};
+
+async function fileExists(filePath) {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function findBrowserExecutable() {
+  const explicitPath = process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_PATH;
+  if (explicitPath) return explicitPath;
+
+  const candidates = executableCandidatesByPlatform[process.platform] || [];
+  for (const candidate of candidates) {
+    if (candidate && (await fileExists(candidate))) return candidate;
+  }
+
+  return undefined;
+}
+
+async function launchBrowser() {
+  const launchOptions = {
+    headless: 'new',
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  };
+  const explicitPath = process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_PATH;
+  if (explicitPath) {
+    return puppeteer.launch({ ...launchOptions, executablePath: explicitPath });
+  }
+
+  try {
+    return await puppeteer.launch(launchOptions);
+  } catch (error) {
+    if (!String(error?.message || '').includes('Could not find Chrome')) throw error;
+
+    const executablePath = await findBrowserExecutable();
+    if (!executablePath) throw error;
+    return puppeteer.launch({ ...launchOptions, executablePath });
+  }
+}
+
 async function main() {
   // Programmatic vite preview avoids juggling a separate static-server dep
   // and inherits the project's existing build config.
@@ -45,10 +110,7 @@ async function main() {
   const port = typeof address === 'object' && address ? address.port : 4173;
   const baseUrl = `http://127.0.0.1:${port}`;
 
-  const browser = await puppeteer.launch({
-    headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  });
+  const browser = await launchBrowser();
 
   const failures = [];
   let processed = 0;
