@@ -18,6 +18,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
   const analyserRef = useRef(null);
   const sourceConnected = useRef(false);
   const autoPlayHandled = useRef(!autoPlay);
+  const latestAutoPlay = useRef(autoPlay);
 
   // Initialize AudioContext + Analyser (once)
   useEffect(() => {
@@ -38,16 +39,26 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
     };
   }, []);
 
+  useEffect(() => {
+    latestAutoPlay.current = autoPlay;
+    if (autoPlay) {
+      autoPlayHandled.current = false;
+      audioRef.current?.load();
+    }
+  }, [autoPlay]);
+
   // Connect <audio> → analyser → destination.
   // Because <audio key={track?.audioFile}> remounts on track change,
   // createMediaElementSource is effectively called once per audio element.
   useEffect(() => {
-    // Reset connection state for the new track mount
+    // Reset connection state only for a real track change. `autoPlay` is a
+    // one-shot trigger; resetting here when it flips back to false would wipe
+    // duration/currentTime and attempt to reconnect the same media element.
     sourceConnected.current = false;
     setCurrentTime(0);
     setDuration(0);
     setError(null);
-    autoPlayHandled.current = !autoPlay;
+    autoPlayHandled.current = !latestAutoPlay.current;
 
     const audioEl = audioRef.current;
     if (!audioEl || !track?.audioFile) return;
@@ -82,7 +93,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
     // requested, kick off loading so `loadedmetadata` fires and the autoplay
     // handler in onLoadedMetadata can run (manual playback doesn't need this —
     // the play() call triggers loading on its own).
-    if (autoPlay) {
+    if (latestAutoPlay.current) {
       audioEl.load();
     }
 
@@ -91,7 +102,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
       // track change, which invalidates its source node automatically.
       sourceConnected.current = false;
     };
-  }, [track?.audioFile, autoPlay]);
+  }, [track?.audioFile]);
 
   // Update audio frequency data for visualization — memoized to satisfy exhaustive-deps
   const updateAudioData = useCallback(() => {
@@ -193,7 +204,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
             setDuration(newDuration);
             setError(null);
             // Trigger autoplay if prop is set and not already handled for this load
-            if (autoPlay && !autoPlayHandled.current) {
+            if (latestAutoPlay.current && !autoPlayHandled.current) {
                 setIsPlaying(true); // This will trigger the play/pause useEffect
                 autoPlayHandled.current = true;
                 if (typeof onAutoPlayComplete === 'function') {
@@ -344,10 +355,10 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
         >
           <div
             className="absolute top-0 left-0 h-full bg-gradient-to-r from-accent-magenta to-accent-blue transition-all duration-100 ease-linear"
-            style={{ width: `${(currentTime / duration) * 100}%` }}
+            style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
           />
            <div className="absolute top-0 left-0 h-full bg-accent-blue blur opacity-0 group-hover:opacity-50 transition-opacity duration-200"
-             style={{ width: `${(currentTime / duration) * 100}%` }}/>
+             style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}/>
         </div>
         <div className="flex justify-between text-xs text-gray-400 mt-1">
           <span>{formatTime(currentTime)}</span>

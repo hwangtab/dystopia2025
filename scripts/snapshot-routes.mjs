@@ -175,7 +175,14 @@ async function main() {
     }
   } finally {
     await browser.close();
-    await new Promise((resolve) => server.httpServer.close(resolve));
+    server.httpServer.closeAllConnections?.();
+    server.httpServer.closeIdleConnections?.();
+    await new Promise((resolve, reject) => {
+      server.httpServer.close((error) => {
+        if (error) reject(error);
+        else resolve();
+      });
+    });
   }
 
   if (failures.length > 0) {
