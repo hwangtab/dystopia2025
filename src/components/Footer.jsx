@@ -41,8 +41,7 @@ const FooterComponent = () => {
     };
 
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_NEWSLETTER_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
-      .then((response) => {
-        console.log('Footer Newsletter SUCCESS!', response.status, response.text);
+      .then(() => {
         setNewsletterStatus({
           submitted: true,
           success: true,
@@ -51,7 +50,6 @@ const FooterComponent = () => {
         });
         setNewsletterEmail(''); // Clear input on success
       }, (error) => {
-        console.log('Footer Newsletter FAILED...', error);
         setNewsletterStatus({
           submitted: true,
           success: false,

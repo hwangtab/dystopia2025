@@ -64,6 +64,20 @@ if (!footerInputRegex.test(read('dist/index.html'))) {
   fail('footer newsletter email input should have a label or aria-label');
 }
 
+const walk = (dir) =>
+  fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const file = path.join(dir, entry.name);
+    return entry.isDirectory() ? walk(file) : file;
+  });
+
+const runtimeConsoleLogs = walk('src')
+  .filter((file) => /\.(jsx?|tsx?)$/.test(file))
+  .filter((file) => /\bconsole\.log\s*\(/.test(read(file)));
+
+if (runtimeConsoleLogs.length > 0) {
+  fail(`runtime source should not contain console.log: ${runtimeConsoleLogs.join(', ')}`);
+}
+
 if (failures.length > 0) {
   console.error('[check-regressions] failures:');
   for (const failure of failures) console.error(`- ${failure}`);

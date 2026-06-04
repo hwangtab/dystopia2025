@@ -79,8 +79,7 @@ const ContactPage = () => {
     };
 
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
-      .then((response) => {
-        console.log('SUCCESS!', response.status, response.text);
+      .then(() => {
         setContactFormStatus({
           submitted: true,
           success: true,
@@ -98,7 +97,6 @@ const ContactPage = () => {
           newsletter: true
         });
       }, (error) => {
-        console.log('FAILED...', error);
         setContactFormStatus({
           submitted: true,
           success: false,
@@ -122,8 +120,7 @@ const ContactPage = () => {
 
     // Use a different template ID for newsletter subscriptions
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_NEWSLETTER_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
-      .then((response) => {
-        console.log('Newsletter SUCCESS!', response.status, response.text);
+      .then(() => {
         setNewsletterStatus({
           submitted: true,
           success: true,
@@ -132,7 +129,6 @@ const ContactPage = () => {
         });
         setNewsletterEmail(''); // Clear input on success
       }, (error) => {
-        console.log('Newsletter FAILED...', error);
         setNewsletterStatus({
           submitted: true,
           success: false,
