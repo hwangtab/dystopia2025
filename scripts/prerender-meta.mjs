@@ -166,6 +166,27 @@ async function main() {
   const templatePath = path.join(DIST, 'index.html');
   const rawTemplate = await fs.readFile(templatePath, 'utf-8');
   const template = stripHtmlComments(rawTemplate);
+  const notFoundRoot = `
+    <div class="flex flex-col min-h-screen bg-primary">
+      <header class="fixed top-0 left-0 right-0 z-50 bg-primary-dark/80 py-3 border-b border-accent-blue/30">
+        <div class="container-custom mx-auto px-4 flex justify-between items-center">
+          <a href="/" class="flex items-center">
+            <span class="text-2xl font-blender text-white"><span class="text-accent-magenta">DYSTOPIA</span><span class="text-accent-blue">2025</span></span>
+          </a>
+        </div>
+      </header>
+      <main class="flex-grow min-h-screen pt-24 pb-16">
+        <div class="container-custom mx-auto py-24 text-center">
+          <p class="text-accent-magenta font-blender text-sm tracking-wider mb-4">404</p>
+          <h1 class="text-3xl md:text-5xl font-blender mb-6">페이지를 찾을 수 없습니다</h1>
+          <p class="text-gray-300 max-w-xl mx-auto mb-8 break-keep">요청하신 주소가 존재하지 않거나 이동되었습니다. 앨범과 공연 정보는 아래 링크에서 다시 확인할 수 있습니다.</p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="/" class="btn-primary">홈으로 돌아가기</a>
+            <a href="/album" class="btn-secondary">앨범 보기</a>
+          </div>
+        </div>
+      </main>
+    </div>`;
 
   let written = 0;
   for (const meta of routes) {
@@ -200,6 +221,7 @@ async function main() {
       twitterCard: 'summary',
     },
   })
+    .replace('<div id="root"></div>', `<div id="root">${notFoundRoot}</div>`)
     // Both robots and googlebot must say noindex — leaving googlebot as
     // "index, follow" creates a conflicting directive that Search Console
     // flags.
@@ -215,7 +237,8 @@ async function main() {
     // pointing at "/404" would invite Google to index that phantom URL.
     // Drop the canonical entirely for this file so nothing consolidates
     // toward it.
-    .replace(/\s*<link[^>]*rel="canonical"[^>]*>/, '');
+    .replace(/\s*<link[^>]*rel="canonical"[^>]*>/, '')
+    .replace(/\s*<meta[^>]*property="og:url"[^>]*>/, '');
   await fs.writeFile(path.join(DIST, '404.html'), notFound, 'utf-8');
 
   // Trim millisecond precision from sitemap <lastmod>. The plugin accepts

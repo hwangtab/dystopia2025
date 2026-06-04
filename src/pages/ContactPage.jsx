@@ -418,6 +418,7 @@ const ContactPage = () => {
                 <form ref={newsletterFormRef} onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row max-w-lg mx-auto">
                   <input
                     type="email"
+                    aria-label="뉴스레터 이메일 주소"
                     placeholder="이메일 주소"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}

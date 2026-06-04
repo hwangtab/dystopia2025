@@ -12,6 +12,11 @@ import eventsData from '../data/events.json';
 
 const EventsPage = () => {
   const [expandedEvent, setExpandedEvent] = useState(null);
+  const today = useMemo(() => {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }, []);
 
   const toggleEvent = (eventId) => {
     if (expandedEvent === eventId) {
@@ -174,7 +179,7 @@ const EventsPage = () => {
                                 {event.description}
                               </p>
                               {/* Correctly access the nested bookingLink */}
-                              {event.tickets?.bookingLink && ( // Add optional chaining for safety
+                              {new Date(event.date) >= today && event.tickets?.bookingLink && ( // Add optional chaining for safety
                                 <a
                                   href={event.tickets.bookingLink}
                                   target="_blank"

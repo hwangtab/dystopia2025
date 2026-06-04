@@ -80,11 +80,11 @@ const FooterComponent = () => {
             <div className="flex space-x-4 mt-4">
               {/* Use magenta for social icon hover */}
               {/* Instagram Link */}
-              <a href="https://www.instagram.com/hojin7576/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-magenta transition-colors hover:drop-shadow-[0_0_5px_var(--color-accent-magenta)]">
+              <a href="https://www.instagram.com/hojin7576/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-400 hover:text-accent-magenta transition-colors hover:drop-shadow-[0_0_5px_var(--color-accent-magenta)]">
                 <FaInstagram size={20} />
               </a>
               {/* Facebook Link Added */}
-              <a href="https://www.facebook.com/trianglewaver23" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-accent-magenta transition-colors hover:drop-shadow-[0_0_5px_var(--color-accent-magenta)]">
+              <a href="https://www.facebook.com/trianglewaver23" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-gray-400 hover:text-accent-magenta transition-colors hover:drop-shadow-[0_0_5px_var(--color-accent-magenta)]">
                 {/* Assuming you might need FaFacebook icon, import it if needed */}
                 {/* <FaFacebook size={20} />  */}
                  {/* Placeholder text if icon not available */}
@@ -135,6 +135,7 @@ const FooterComponent = () => {
               <form ref={newsletterFormRef} onSubmit={handleNewsletterSubmit} className="flex flex-col space-y-2">
                 <input
                   type="email"
+                  aria-label="뉴스레터 이메일 주소"
                   placeholder="이메일 주소"
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}

@@ -98,9 +98,9 @@ const AlbumPage = () => {
 
               <div className="mb-6">
                 {/* Temporarily replace GlitchText with plain text */}
-                <h1 className="text-3xl mb-2 text-white"> {/* Ensure text color is visible */}
+                <h2 className="text-3xl mb-2 text-white"> {/* Ensure text color is visible */}
                   {albumData.album.title}
-                </h1>
+                </h2>
                 <p className="text-xl text-gray-300">{albumData.album.artist}</p>
                 <p className="text-accent-blue mt-2"> {/* Use blue */}
                   {new Date(albumData.album.releaseDate).toLocaleDateString('ko-KR', {

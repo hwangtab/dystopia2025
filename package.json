@@ -12,6 +12,7 @@
     "snapshot": "node scripts/snapshot-routes.mjs",
     "optimize-images": "node scripts/optimize-images.mjs",
     "optimize-audio": "node scripts/optimize-audio.mjs",
+    "check:regressions": "node scripts/check-regressions.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages --dotfiles -d dist",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",

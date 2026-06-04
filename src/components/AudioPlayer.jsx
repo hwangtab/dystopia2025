@@ -314,6 +314,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
           onClick={togglePlay}
           className="bg-accent-magenta hover:bg-opacity-80 text-white rounded-full w-10 h-10 flex items-center justify-center mr-4 focus:outline-none shadow-md hover:shadow-neon-magenta"
           disabled={!!error || (!track?.audioFile)}
+          aria-label={isPlaying ? `${track?.title || '트랙'} 일시정지` : `${track?.title || '트랙'} 재생`}
         >
           {isPlaying ? <FaPause /> : <FaPlay />}
         </button>
@@ -372,6 +373,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
           onClick={!error ? toggleMute : undefined}
           className="text-gray-400 hover:text-accent-blue mr-2 focus:outline-none transition-colors"
           disabled={!!error}
+          aria-label={isMuted ? '음소거 해제' : '음소거'}
         >
           {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
         </button>
@@ -384,6 +386,7 @@ const AudioPlayer = ({ track, onEnded, autoPlay = false, onAutoPlayComplete }) =
           onChange={handleVolumeChange}
           className="w-24 h-1 bg-gray-700 rounded-full appearance-none cursor-pointer accent-accent-magenta"
           disabled={!!error}
+          aria-label="볼륨"
         />
       </div>
     </div>

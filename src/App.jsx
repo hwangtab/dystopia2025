@@ -20,6 +20,7 @@ const MediaPage = lazy(() => import('./pages/MediaPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage')); // Import Privacy Policy Page
 const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage')); // Import Terms of Service Page
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Simple fallback component for Suspense
 const RouteFallback = () => (
@@ -75,6 +76,7 @@ function AppContent() {
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/privacy" element={<PrivacyPolicyPage />} />
                 <Route path="/terms" element={<TermsOfServicePage />} />
+                <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </motion.div>
             </AnimatePresence>

@@ -9,20 +9,6 @@ const INTENSITY_PARAMS = {
   extreme: { probability: 0.5, interval: 400, duration: 250, charProbability: 0.7, maxOffset: 5 },
 };
 
-// Glitch characters pool
-const GLITCH_CHARS = '!@#$%^&*()_+-=[]{}|;:,./<>?`~01█▓▒░';
-
-/**
- * Glitch effect — single source of truth for the glitchify logic.
- */
-const glitchify = (text, charProbability) =>
-  text
-    .split('')
-    .map((c) =>
-      c === ' ' ? ' ' : Math.random() < charProbability ? GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)] : c
-    )
-    .join('');
-
 const GlitchText = ({
   text,
   className,
@@ -32,7 +18,6 @@ const GlitchText = ({
 }) => {
   const shouldReduceMotion = useReducedMotion();
 
-  const [glitchedText, setGlitchedText] = useState(text);
   const [isGlitching, setIsGlitching] = useState(false);
   const glitchingRef = useRef(false);
   const timeoutRef = useRef(null);
@@ -44,7 +29,7 @@ const GlitchText = ({
     [intensity]
   );
 
-  const { probability, interval, duration, charProbability, maxOffset } = params;
+  const { probability, interval, duration, maxOffset } = params;
 
   // useCallback: stable function reference
   const triggerGlitch = useCallback(() => {
@@ -56,14 +41,12 @@ const GlitchText = ({
     let frameCount = 0;
 
     const glitchFrame = () => {
-      setGlitchedText(glitchify(text, charProbability));
       frameCount++;
 
       if (frameCount < frames) {
         timeoutRef.current = setTimeout(glitchFrame, Math.random() * 50 + 20);
       } else {
         timeoutRef.current = setTimeout(() => {
-          setGlitchedText(text);
           setIsGlitching(false);
           glitchingRef.current = false;
         }, duration);
@@ -71,7 +54,7 @@ const GlitchText = ({
     };
 
     glitchFrame();
-  }, [text, charProbability, duration, shouldReduceMotion]);
+  }, [duration, shouldReduceMotion]);
 
   // Random glitch effect — only when not interactive
   useEffect(() => {
@@ -79,7 +62,6 @@ const GlitchText = ({
     if (intervalRef.current) clearInterval(intervalRef.current);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setIsGlitching(false);
-    setGlitchedText(text);
 
     if (interactive || shouldReduceMotion) return;
 
@@ -93,14 +75,12 @@ const GlitchText = ({
         let frameCount = 0;
 
         const glitchFrame = () => {
-          setGlitchedText(glitchify(text, charProbability));
           frameCount++;
 
           if (frameCount < frames) {
             timeoutRef.current = setTimeout(glitchFrame, Math.random() * 50 + 20);
           } else {
             timeoutRef.current = setTimeout(() => {
-              setGlitchedText(text);
               setIsGlitching(false);
               glitchingRef.current = false;
             }, duration);
@@ -118,7 +98,7 @@ const GlitchText = ({
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       glitchingRef.current = false;
     };
-  }, [text, probability, interval, duration, charProbability, interactive, shouldReduceMotion]);
+  }, [probability, interval, duration, interactive, shouldReduceMotion]);
 
   // Stable event handler
   const handleMouseEnter = useCallback(() => {
@@ -150,7 +130,7 @@ const GlitchText = ({
       {...motionProps}
     >
       <span className="relative z-10" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.5)' }}>
-        {glitchedText}
+        {text}
       </span>
 
       {/* Glitch Layers based on style */}
@@ -163,7 +143,7 @@ const GlitchText = ({
             animate={{ x: randomOffset(), y: randomOffset() }}
             transition={{ duration: 0.05, ease: 'linear' }}
           >
-            {glitchedText}
+            {text}
           </motion.span>
           <motion.span
             aria-hidden="true"
@@ -172,7 +152,7 @@ const GlitchText = ({
             animate={{ x: randomOffset(), y: randomOffset() }}
             transition={{ duration: 0.05, ease: 'linear' }}
           >
-            {glitchedText}
+            {text}
           </motion.span>
         </>
       )}
@@ -187,7 +167,7 @@ const GlitchText = ({
           animate={{ scaleX: Math.random() * 0.5 + 0.8 }}
           transition={{ duration: 0.1, ease: 'circOut' }}
         >
-          {glitchedText}
+          {text}
         </motion.span>
       )}
       {isGlitching && !shouldReduceMotion && glitchStyle === 'subtle' && (
@@ -197,7 +177,7 @@ const GlitchText = ({
           animate={{ x: randomOffset() / 2, y: randomOffset() / 2 }}
           transition={{ duration: 0.08, ease: 'easeOut' }}
         >
-          {glitchedText}
+          {text}
         </motion.span>
       )}
     </motion.span>

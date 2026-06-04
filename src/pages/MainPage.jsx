@@ -200,6 +200,7 @@ const MainPage = () => {
                 <Link
                   to="/album"
                   className="absolute inset-0 flex items-center justify-center group"
+                  aria-label="Dystopia 2025 앨범 보기"
                 >
                   <div className="w-20 h-20 rounded-full bg-accent-magenta bg-opacity-80 flex items-center justify-center transform transition-transform group-hover:scale-110 shadow-lg group-hover:shadow-neon-magenta"> {/* Use magenta */}
                     <FaPlay className="text-white text-2xl ml-1" />
