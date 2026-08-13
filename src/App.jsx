@@ -91,11 +91,10 @@ function AppContent() {
 
 
 function App() {
-  // Skip the intro splash on prerendered routes — the content is already
-  // baked into the HTML by `scripts/snapshot-routes.mjs`, so playing a
-  // loader on top would only obscure visible content with a black overlay.
-  // Detect via the root's children count (captured in a single
-  // getElementById call to avoid any race between checks).
+  // Detect whether `scripts/snapshot-routes.mjs` baked this route's DOM into
+  // the HTML. Used only to suppress the first-paint animation flicker below —
+  // the intro splash itself plays either way, layered on top of the app.
+  // Captured in a single getElementById call to avoid any race between checks.
   const wasPrerendered = useRef(
     typeof document !== 'undefined' &&
       (() => {
@@ -103,7 +102,7 @@ function App() {
         return root != null && root.children.length > 0;
       })()
   );
-  const [initialLoading, setInitialLoading] = useState(() => !wasPrerendered.current);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   // Compress the framer-motion enter animations to zero duration on the
   // first React paint of a prerendered route. createRoot still discards
@@ -133,18 +132,34 @@ function App() {
     return () => clearTimeout(timer);
   }, [initialLoading]);
 
+  // The splash covers the viewport, so any scrolling that happens underneath it
+  // is invisible to the user but would leave them mid-page once it lifts.
+  useEffect(() => {
+    if (!initialLoading) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [initialLoading]);
+
   return (
     <MotionConfig reducedMotion={staticFirstPaint ? 'always' : 'user'}>
-      <AnimatePresence>
-        {initialLoading && <LoadingScreen onLoadingComplete={() => setInitialLoading(false)} />}
-      </AnimatePresence>
-
-      {!initialLoading && (
+      {/* The app mounts immediately rather than waiting for the splash to
+          finish. The prerendered snapshot already painted this content, so
+          gating the Router on `!initialLoading` would blank it out and push
+          LCP past the whole intro. `inert` keeps the covered content out of
+          tab order and the accessibility tree while the splash is up. */}
+      <div inert={initialLoading ? '' : undefined}>
         <Router>
           <ScrollToTop />
           <AppContent />
         </Router>
-      )}
+      </div>
+
+      <AnimatePresence>
+        {initialLoading && <LoadingScreen onLoadingComplete={() => setInitialLoading(false)} />}
+      </AnimatePresence>
     </MotionConfig>
   );
 }

@@ -78,6 +78,35 @@ if (runtimeConsoleLogs.length > 0) {
   fail(`runtime source should not contain console.log: ${runtimeConsoleLogs.join(', ')}`);
 }
 
+// The intro splash used to be skipped entirely on prerendered routes, which
+// meant it never played on the deployed site. It now overlays the app instead:
+// the Router mounts immediately so the prerendered LCP candidate still paints,
+// and the splash sits on top of it.
+const appSource = read('src/App.jsx');
+if (!/<LoadingScreen\b/.test(appSource)) {
+  fail('App should still render the intro LoadingScreen');
+}
+if (/!wasPrerendered\.current/.test(appSource)) {
+  fail('intro splash should not be disabled on prerendered routes');
+}
+if (/\{!initialLoading && \(?\s*<Router/.test(appSource)) {
+  fail('Router should mount during the intro splash so the LCP candidate paints behind it');
+}
+if (!/inert=/.test(appSource)) {
+  fail('app content behind the intro splash should be inert so it stays out of tab order');
+}
+
+// The scramble backdrop is a full-viewport character grid. A pre-allocation
+// pass once filled it with NUL placeholders and never wrote the per-row line
+// breaks, collapsing the whole effect onto a single visible line.
+const loadingScreenSource = read('src/components/LoadingScreen.jsx');
+if (/'\\0'\.repeat/.test(loadingScreenSource)) {
+  fail('scramble buffer should hold real characters, not NUL placeholders');
+}
+if (!/'\\n'/.test(loadingScreenSource)) {
+  fail('scramble buffer should terminate each row with a line break so it fills the viewport');
+}
+
 if (failures.length > 0) {
   console.error('[check-regressions] failures:');
   for (const failure of failures) console.error(`- ${failure}`);

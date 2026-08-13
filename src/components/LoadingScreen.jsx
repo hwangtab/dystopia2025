@@ -21,15 +21,20 @@ const initScrambleBuffer = (width, height, charWidth = 5, charHeight = 11) => {
   const rows = Math.max(60, Math.ceil(height / charHeight) + 10);
   // Each line = cols chars + newline
   const lineLen = cols + 1;
-  const totalLen = lineLen * rows;
-  scrambleBuffer = '\0'.repeat(totalLen);
+  const buffer = new Array(lineLen * rows);
   scrambleIndices = new Int32Array(cols * rows);
-  // Fill indices to point into scrambleBuffer
+  // Seed every cell and close each row with a line break. Both matter: an
+  // unseeded buffer leaves most of the grid blank, and a missing newline
+  // collapses the whole viewport-sized block onto one rendered line.
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      scrambleIndices[r * cols + c] = r * lineLen + c;
+      const offset = r * lineLen + c;
+      scrambleIndices[r * cols + c] = offset;
+      buffer[offset] = chars[Math.floor(Math.random() * chars.length)];
     }
+    buffer[r * lineLen + cols] = '\n';
   }
+  scrambleBuffer = buffer.join('');
 };
 
 /**
